@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/../hermerest/vendor/nelmio/cors-bundle" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/jdorn/sql-formatter" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/sensio/generator-bundle" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/sensio/distribution-bundle" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/sensio/framework-extra-bundle" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/symfony/polyfill-php56" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/symfony/swiftmailer-bundle" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/symfony/polyfill-intl-icu" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/symfony/polyfill-apcu" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/symfony/symfony" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/symfony/monolog-bundle" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/symfony/polyfill-util" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/doctrine/cache" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/doctrine/doctrine-cache-bundle" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/symfony/polyfill-php70" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/symfony/phpunit-bridge" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/doctrine/collections" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/doctrine/common" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/doctrine/doctrine-bundle" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/doctrine/orm" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/doctrine/inflector" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/doctrine/annotations" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/doctrine/dbal" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/sensiolabs/security-checker" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/incenteev/composer-parameter-handler" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/friendsofsymfony/rest-bundle" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/swiftmailer/swiftmailer" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/willdurand/negotiation" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/willdurand/jsonp-callback-validator" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/composer" />
+      <path value="$PROJECT_DIR$/../hermerest/vendor/psr/cache" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="5.5.0" />
+</project>
