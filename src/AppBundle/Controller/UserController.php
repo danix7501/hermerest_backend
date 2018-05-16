@@ -46,8 +46,6 @@ class UserController extends Controller
         return $this->responseFactory->successfulJsonResponse(
             $this->jwtAuth->encodeUser($user)
         );
-        echo 'hola';
-        die();
 
     }
 }
