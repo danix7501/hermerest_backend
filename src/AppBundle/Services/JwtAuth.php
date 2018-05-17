@@ -35,8 +35,10 @@ class JwtAuth
      */
     public function encodeUser($user)
     {
+        $associatedUser = $this->userFacade->getAssociatedUserFor($user);
         return JWT::encode([
             "sub" => $user->getId(),
+            "id" => $associatedUser->getId(),
             "username" => $user->getUsername(),
             "rol" => $user->getRol(),
             "iat" => time(),

@@ -27,4 +27,12 @@ class UserFacade extends AbstractFacade
         );
     }
 
+    public function getAssociatedUserFor($user)
+    {
+        return $this->entityManager->getRepository('AppBundle:' . ucfirst($user->getRol()))
+            ->findOneBy(
+                array("user" => $user)
+            );
+    }
+
 }

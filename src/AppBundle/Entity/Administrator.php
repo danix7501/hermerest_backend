@@ -4,30 +4,27 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Centre;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToOne;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="administrator")
  */
-class Administrator implements UserInterface, \Serializable
+class Administrator
 {
     /**
      * @ORM\Column(type="integer", name="id")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50, name="user", nullable=false, unique=true)
+     * @OneToOne(targetEntity="User")
+     * @JoinColumn(name="id_usuario", referencedColumnName="id")
      */
     private $user;
-
-    /**
-     * @ORM\Column(type="string", length=32, name="password", nullable=false)
-     */
-    private $password;
 
     /**
      * @ORM\Column(type="string", length=50, name="name", nullable=false)
@@ -72,20 +69,6 @@ class Administrator implements UserInterface, \Serializable
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return Administrator
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
     }
 
     /**
@@ -158,30 +141,6 @@ class Administrator implements UserInterface, \Serializable
         return array('ROLE_USER');
     }
 
-    /**
-     * Returns the password used to authenticate the user.
-     *
-     * This should be the encoded password. On authentication, a plain-text
-     * password will be salted, encoded, and then compared to this value.
-     *
-     * @return string The password
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
-     * Returns the salt that was originally used to encode the password.
-     *
-     * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
-     */
-    public function getSalt()
-    {
-        return null;
-    }
 
     /**
      * Returns the username used to authenticate the user.
@@ -193,16 +152,6 @@ class Administrator implements UserInterface, \Serializable
         return $this->user;
     }
 
-    /**
-     * Removes sensitive data from the user.
-     *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
-     */
-    public function eraseCredentials()
-    {
-
-    }
 
     /**
      * String representation of object
@@ -215,7 +164,6 @@ class Administrator implements UserInterface, \Serializable
         return serialize(array(
             $this->id,
             $this->user,
-            $this->password,
             $this->name,
             $this->centre,
         ));
@@ -235,7 +183,6 @@ class Administrator implements UserInterface, \Serializable
         list(
             $this->id,
             $this->user,
-            $this->password,
             $this->name,
             $this->centre,
             ) = unserialize($serialized);
