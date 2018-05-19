@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="class", uniqueConstraints={
+ * @ORM\Table(name="course", uniqueConstraints={
  * @ORM\UniqueConstraint(columns={"name", "centre"})
  * })
  */
@@ -29,13 +29,13 @@ class Course
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Centre", inversedBy="classes")
+     * @ORM\ManyToOne(targetEntity="Centre", inversedBy="courses")
      * @ORM\JoinColumn(name="centre", referencedColumnName="id", nullable=false, onDelete="cascade")
      */
     private $centre;
 
     /**
-     * @ORM\OneToMany(targetEntity="Student", mappedBy="class")
+     * @ORM\OneToMany(targetEntity="Student", mappedBy="course")
      * @ORM\OrderBy({"surname" = "ASC", "name" = "ASC"})
      */
     private $students;

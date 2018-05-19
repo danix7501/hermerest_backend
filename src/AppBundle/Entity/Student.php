@@ -36,9 +36,9 @@ class Student
 
     /**
      * @ORM\ManyToOne(targetEntity="Course", inversedBy="students")
-     * @ORM\JoinColumn(name="class", referencedColumnName="id", onDelete="set null")
+     * @ORM\JoinColumn(name="course", referencedColumnName="id", onDelete="set null")
      */
-    private $class;
+    private $course;
 
     /**
      * @ORM\ManyToOne(targetEntity="Centre", inversedBy="students")
@@ -67,14 +67,14 @@ class Student
      */
     private $authorizationReplies;
 
-    public function __construct($name = null, $surname = null, Course $class = null, Centre $centre = null)
+    public function __construct($name = null, $surname = null, Course $course = null, Centre $centre = null)
     {
         $this->parents = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->authorizationReplies = new ArrayCollection();
         $this->name = $name;
         $this->surname = $surname;
-        $this->class = $class;
+        $this->course = $course;
         $this->centre = $centre;
     }
 
@@ -138,27 +138,27 @@ class Student
     }
 
     /**
-     * Set class
+     * Set course
      *
-     * @param Course $class
+     * @param Course $course
      *
      * @return Student
      */
-    public function setClass(Course $class = null)
+    public function setCourse(Course $course = null)
     {
-        $this->class = $class;
+        $this->course = $course;
 
         return $this;
     }
 
     /**
-     * Get class
+     * Get course
      *
      * @return Course
      */
-    public function getClass()
+    public function getCourse()
     {
-        return $this->class;
+        return $this->course;
     }
 
     /**
@@ -296,11 +296,11 @@ class Student
     public function getMessagesOfType($type)
     {
         $messages = new ArrayCollection();
-        $className = "\\AppBundle\\Entity\\" . $type;
-        $class = get_class(new $className());
+        $courseName = "\\AppBundle\\Entity\\" . $type;
+        $course = get_class(new $courseName());
 
         foreach ($this->messages as $message)
-            if ($message instanceof $class)
+            if ($message instanceof $course)
                 $messages->add($message);
 
         return $messages;

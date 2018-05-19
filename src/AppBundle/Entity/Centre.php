@@ -31,7 +31,7 @@ class Centre
      * @ORM\OneToMany(targetEntity="Course", mappedBy="centre")
      * @ORM\OrderBy({"name" = "ASC"})
      */
-    private $classes;
+    private $courses;
 
     /**
      * @ORM\OneToMany(targetEntity="Student", mappedBy="centre")
@@ -57,7 +57,7 @@ class Centre
 
     public function __construct($name = null)
     {
-        $this->classes = new ArrayCollection();
+        $this->courses = new ArrayCollection();
         $this->students = new ArrayCollection();
         $this->parents = new ArrayCollection();
         $this->messages = new ArrayCollection();
@@ -66,8 +66,8 @@ class Centre
 
     public function containsClassNamedBy($name)
     {
-        foreach ($this->getClasses() as $class)
-            if (strtolower($class->getName()) == strtolower($name)) return true;
+        foreach ($this->getCourses() as $course)
+            if (strtolower($course->getName()) == strtolower($name)) return true;
         return false;
     }
 
@@ -108,13 +108,13 @@ class Centre
     /**
      * Add class
      *
-     * @param Course $class
+     * @param Course $course
      *
      * @return Centre
      */
-    public function addClass(Course $class)
+    public function addClass(Course $course)
     {
-        $this->classes[] = $class;
+        $this->courses[] = $course;
 
         return $this;
     }
@@ -122,21 +122,21 @@ class Centre
     /**
      * Remove class
      *
-     * @param Course $class
+     * @param Course $course
      */
-    public function removeClass(Course $class)
+    public function removeClass(Course $course)
     {
-        $this->classes->removeElement($class);
+        $this->courses->removeElement($course);
     }
 
     /**
-     * Get classes
+     * Get courses
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getClasses()
+    public function getCourses()
     {
-        return $this->classes;
+        return $this->courses;
     }
 
     /**
@@ -216,11 +216,11 @@ class Centre
     public function getMessagesOfType($type)
     {
         $messages = new ArrayCollection();
-        $className = "\\AppBundle\\Entity\\" . $type;
-        $class = get_class(new $className());
+        $courseName = "\\AppBundle\\Entity\\" . $type;
+        $course = get_class(new $courseName());
 
         foreach ($this->messages as $message)
-            if ($message instanceof $class)
+            if ($message instanceof $course)
                 $messages->add($message);
 
         return $messages;

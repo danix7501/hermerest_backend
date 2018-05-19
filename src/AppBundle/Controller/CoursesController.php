@@ -9,24 +9,48 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Course;
+use AppBundle\Normalizers\StudentNormalizer;
 use AppBundle\Services\Facades\CourseFacade;
+use AppBundle\Services\Utils;
 use AppBundle\Services\ResponseFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Route("/courses")
+ */
 class CoursesController
 {
+    private $courseFacade;
+    private $responseFactory;
+    private $utils;
 
+    public function __construct(CourseFacade $courseFacade,
+                                ResponseFactory $responseFactory,
+                                Utils $utils)
+    {
+        $this->courseFacade = $courseFacade;
+        $this->responseFactory = $responseFactory;
+        $this->utils = $utils;
+    }
     /**
-     * @Route("/courses", name="courses")
+     * @Route("/{id}/students", name="listarAlumnosdelCurso")
      * @Method("GET")
      */
-    public function coursesAction(Request $request)
+    public function getStudentsAction(Request $request, $id)
     {
-    echo 'cursos';
-    die();
+        $course= $this->courseFacade->find($id);
+        if ($course == null) return $this->responseFactory->unsuccessfulJsonResponse("El curso no existe");
+
+        return $this->responseFactory->successfulJsonResponse(
+            ['students' =>
+                $this->utils->serializeArray(
+                    $course->getStudents(), new StudentNormalizer()
+                )
+            ]
+        );
     }
 
 }
