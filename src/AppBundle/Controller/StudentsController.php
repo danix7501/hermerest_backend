@@ -55,21 +55,21 @@ class StudentsController extends Controller
         );
     }
 
-//    /**
-//     * @Route("/{id}/parents", name="listarPadresDeAlumno")
-//     * @Method("GET")
-//     */
-//    public function getParentsAction(Request $request, $id)
-//    {
-//        $progetinor = $this->progenitorFacade->find($id);
-//        if ($progetinor == null) return $this->responseFactory->unsuccessfulJsonResponse("El alumno no existe");
-//
-//        return $this->responseFactory->successfulJsonResponse(
-//            ['parents' =>
-//                $this->utils->serializeArray(
-//                    $progetinor->getParents(), new ProgenitorNormalizer()
-//                )
-//            ]
-//        );
-//    }
+    /**
+     * @Route("/{id}/parents", name="listarPadresDeAlumno")
+     * @Method("GET")
+     */
+    public function getParentsAction(Request $request, $id)
+    {
+        $student = $this->studentFacade->find($id);
+        if ($student == null) return $this->responseFactory->unsuccessfulJsonResponse("El alumno no existe");
+
+        return $this->responseFactory->successfulJsonResponse(
+            ['parents' =>
+                $this->utils->serializeArray(
+                    $student->getParents(), new ProgenitorNormalizer()
+                )
+            ]
+        );
+    }
 }

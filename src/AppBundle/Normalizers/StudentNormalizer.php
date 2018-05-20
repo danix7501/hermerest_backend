@@ -20,7 +20,7 @@ class StudentNormalizer implements NormalizerInterface
             'id' => $object->getId(),
             'name' => $object->getName(),
             'surname' => $object->getSurname(),
-            'course' => (new CourseNormalizer())->normalize($object->getCourse())
+            'course' => (new CourseNormalizer())->normalize($object->getCourse()),
         ];
     }
     public function supportsNormalization($data, $format = null)
