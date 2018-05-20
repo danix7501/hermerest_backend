@@ -72,4 +72,19 @@ class StudentsController extends Controller
             ]
         );
     }
+
+    /**
+     * @Route("/{id}", name="eliminarAlumno")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $student = $this->studentFacade->find($id);
+        if ($student == null) return $this->responseFactory->unsuccessfulJsonResponse("El alumno no existe");
+
+        $this->studentFacade->remove($student);
+        return $this->responseFactory->successfulJsonResponse(
+            []
+        );
+    }
 }

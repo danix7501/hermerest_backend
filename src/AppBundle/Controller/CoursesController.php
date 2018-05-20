@@ -53,4 +53,18 @@ class CoursesController
         );
     }
 
+    /**
+     * @Route("/{id}", name="eliminarCurso")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $course = $this->courseFacade->find($id);
+        if ($course == null) return $this->responseFactory->unsuccessfulJsonResponse("El curso no existe");
+
+        $this->courseFacade->remove($course);
+        return $this->responseFactory->successfulJsonResponse(
+            []
+        );
+    }
 }
