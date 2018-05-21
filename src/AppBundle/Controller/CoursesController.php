@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Course;
 use AppBundle\Entity\Centre;
+use AppBundle\Normalizers\CourseNormalizer;
 use AppBundle\Normalizers\StudentNormalizer;
 use AppBundle\Services\Facades\CourseFacade;
 use AppBundle\Services\Facades\CentreFacade;
@@ -71,7 +72,7 @@ class CoursesController
         $course->setCentre($centre);
 
         $this->courseFacade->create($course);
-        return $this->responseFactory->successfulJsonResponse([]);
+        return $this->responseFactory->successfulJsonResponse((new CourseNormalizer())->normalize($course));
     }
 
 
