@@ -17,4 +17,11 @@ class CourseFacade extends AbstractFacade
     {
         parent::__construct($entityManager, 'AppBundle:Course');
     }
+
+    public function findByNameOfCourse($nameCourse)
+    {
+        return $this->entityManager->getRepository($this->entityName)->findOneBy(
+            array("name" => $nameCourse)
+        );
+    }
 }
