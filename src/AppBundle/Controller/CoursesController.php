@@ -52,6 +52,7 @@ class CoursesController
         $this->responseFactory = $responseFactory;
         $this->utils = $utils;
     }
+
     /**
      * @Route("/{id}/students", name="listarAlumnosdelCurso")
      * @Method("GET")
@@ -108,14 +109,12 @@ class CoursesController
      */
     public function importCourse(Request $request) {
 
-        // TODO: enviar el centro en el que se quiere importar el curso
-        $centre = $this->centreFacade->find(1);
+        $centre = $this->centreFacade->find($_POST['centre']);
 
         $tempFile = $_FILES['file']['tmp_name'];
         $fileName = $_FILES['file']['name'];
         $filePath = $_SERVER['DOCUMENT_ROOT'] .'/hermerest_backend/src/AppBundle/Uploads/'. $fileName;
         move_uploaded_file($tempFile, $filePath);
-//        echo var_dump($filePath);
 
         $reader = Reader::createFromPath('%kernel.root_dir%/../../src/AppBundle/Uploads/'.$fileName);
         $results = $reader->fetchAssoc();
@@ -127,8 +126,6 @@ class CoursesController
                 $course->setName($row['NombreCurso']);
                 $course->setCentre($centre);
                 $this->courseFacade->create($course);
-            }else{
-                return $this->responseFactory->unsuccessfulJsonResponse('El curso ya existe');
             }
 
             $student = $this->studentFacade->findByNameAndSurnameOfStudent($row['NombreAlumno'], $row['ApellidosAlumno']);
@@ -139,32 +136,33 @@ class CoursesController
                 $student->setCourse($course);
                 $student->setCentre($centre);
                 $this->studentFacade->create($student);
-            }else{
-                return $this->responseFactory->unsuccessfulJsonResponse('El nombre o los apellidos de los alumnos ya estan registrados');
-            }
-
-            $progenitor = $this->progenitorFacade->findByTelephone($row['TelefonoPadres']);
-            if ($progenitor == null) {
-                $progenitor = new Progenitor();
-                $progenitor->setName($row['NombrePadres']);
-                $progenitor->setTelephone($row['TelefonoPadres']);
-                $progenitor->addCentre($centre);
-                $progenitor->addChild($student);
-                $this->progenitorFacade->create($progenitor);
-
-                $student->addParent($progenitor);
-                $this->studentFacade->edit();
-
-                $centre->addParent($progenitor);
-                $this->centreFacade->edit();
-
+                $this->relateParentsWithStudents($centre, $student, $row['TelefonoPadres'], $row['NombrePadres']);
             } else {
-                return $this->responseFactory->unsuccessfulJsonResponse('El telefono de alguno de los padres ya esta registrado');
+                $this->relateParentsWithStudents($centre, $student, $row['TelefonoPadres'], $row['NombrePadres']);
             }
-            // TODO: eliminar el fichero guardado en UPLOADS una vez importados los datos
-            return $this->responseFactory->successfulJsonResponse([]);
 
         }
+//        // TODO: eliminar el fichero guardado en UPLOADS una vez importados los datos
+        return $this->responseFactory->successfulJsonResponse([]);
 
+    }
+
+    private function relateParentsWithStudents($centre, $student, $telephoneParents, $nameParents)
+    {
+        $progenitor = $this->progenitorFacade->findByTelephone($telephoneParents);
+        if ($progenitor == null) {
+            $progenitor = new Progenitor();
+            $progenitor->setName($nameParents);
+            $progenitor->setTelephone($telephoneParents);
+            $progenitor->addCentre($centre);
+            $progenitor->addChild($student);
+            $this->progenitorFacade->create($progenitor);
+
+            $student->addParent($progenitor);
+            $this->studentFacade->edit();
+
+            $centre->addParent($progenitor);
+            $this->centreFacade->edit();
+        }
     }
 }

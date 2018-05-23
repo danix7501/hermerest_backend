@@ -50,6 +50,7 @@ class StudentsController extends Controller
         $this->responseFactory = $responseFactory;
         $this->utils = $utils;
     }
+
     /**
      * @Route("/{id}", name="verAlumno")
      * @Method("GET")
@@ -108,15 +109,16 @@ class StudentsController extends Controller
     public function editAction(Request $request, $id)
     {
         $student = $this->studentFacade->find($id);
+        $course = $this->courseFacade->find($request->get('course'));
         if ($student == null) return $this->responseFactory->unsuccessfulJsonResponse("El alumno no existe");
 
         $student->setName($request->request->get('name'));
         $student->setSurname($request->request->get('surname'));
+        $student->setCourse($course);
 
         $this->studentFacade->edit();
         return $this->responseFactory->successfulJsonResponse((new StudentNormalizer())->normalize($student));
     }
-
 
     /**
      * @Route("/{id}", name="eliminarAlumno")
@@ -128,8 +130,45 @@ class StudentsController extends Controller
         if ($student == null) return $this->responseFactory->unsuccessfulJsonResponse("El alumno no existe");
 
         $this->studentFacade->remove($student);
+        return $this->responseFactory->successfulJsonResponse([]);
+    }
+
+    /**
+     * @Route("/{studentId}/parents/{parentTelephone}", name="asociarPadresAlumno")
+     * @Method("POST")
+     */
+    public function associateParentsAction(Request $request, $studentId, $parentTelephone)
+    {
+        //TODO: return mensaje de asociar un padre que ya esta asociado a un alumno
+        //TODO: controlar que un alumno no pueda tener mas de dos padres asociados
+        $student = $this->studentFacade->find($studentId);
+        $parent = $this->progenitorFacade->findByTelephone($parentTelephone);
+        $centre = $student->getCentre();
+
+        if ($parent == null) return $this->responseFactory->unsuccessfulJsonResponse('Este número no corresponde a ningún padre');
+
+        if ($student != null && $parent != null) {
+
+            $student->addParent($parent);
+            $this->studentFacade->edit();
+            $parent->addChild($student);
+            $this->progenitorFacade->edit();
+        }
+
+        if ($parent->getCentres() == null) {
+            $centre->addParent($parent);
+            $this->progenitorFacade->edit();
+            $parent->addCentre($centre);
+            $this->centreFacade->edit();
+        }
+
+
         return $this->responseFactory->successfulJsonResponse(
-            []
+            ['parents' =>
+                $this->utils->serializeArray(
+                    $student->getParents(), new ProgenitorNormalizer()
+                )
+            ]
         );
     }
 }

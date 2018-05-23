@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Centre;
 use AppBundle\Normalizers\CourseNormalizer;
+use AppBundle\Normalizers\ProgenitorNormalizer;
 use AppBundle\Services\Facades\CentreFacade;
 use AppBundle\Services\ResponseFactory;
 use AppBundle\Services\Utils;
@@ -51,6 +52,24 @@ class CentresController extends Controller
             ['courses' =>
                 $this->utils->serializeArray(
                     $centro->getCourses(), new CourseNormalizer()
+                )
+            ]
+        );
+    }
+
+    /**
+     * @Route("/{id}/parents", name="listarPadresDelCentro")
+     * @Method("GET")
+     */
+    public function getParentsAction(Request $request, $id)
+    {
+        $centro= $this->centreFacade->find($id);
+        if ($centro == null) return $this->responseFactory->unsuccessfulJsonResponse("El centro no existe");
+
+        return $this->responseFactory->successfulJsonResponse(
+            ['parents' =>
+                $this->utils->serializeArray(
+                    $centro->getParents(), new ProgenitorNormalizer()
                 )
             ]
         );
