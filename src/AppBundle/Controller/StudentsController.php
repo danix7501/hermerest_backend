@@ -10,7 +10,9 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\Student;
+use AppBundle\Normalizers\AttachmentNormalizer;
 use AppBundle\Normalizers\ProgenitorNormalizer;
+use AppBundle\Normalizers\MessageNormalizer;
 use AppBundle\Normalizers\StudentNormalizer;
 use AppBundle\Services\Facades\CentreFacade;
 use AppBundle\Services\Facades\CourseFacade;
@@ -167,6 +169,23 @@ class StudentsController extends Controller
             ['parents' =>
                 $this->utils->serializeArray(
                     $student->getParents(), new ProgenitorNormalizer()
+                )
+            ]
+        );
+    }
+
+    /**
+     * @Route("/{id}/messages", name="listarMensajesDeAlumno")
+     * @Method("GET")
+     */
+    public function getAuthorizationsOfStudentAction(Request $request, $id)
+    {
+        // TODO: listar solo los mensajes que no esten contestados y los que no se hayan pasado la fecha limite
+        $student = $this->studentFacade->find($id);
+        return $this->responseFactory->successfulJsonResponse(
+            ['messages' =>
+                $this->utils->serializeArray(
+                    $student->getMessages(), new MessageNormalizer()
                 )
             ]
         );
