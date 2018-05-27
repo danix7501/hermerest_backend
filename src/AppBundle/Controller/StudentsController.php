@@ -10,6 +10,8 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\Student;
+use AppBundle\Entity\Progenitor;
+use AppBundle\Entity\Centre;
 use AppBundle\Normalizers\AttachmentNormalizer;
 use AppBundle\Normalizers\ProgenitorNormalizer;
 use AppBundle\Normalizers\MessageNormalizer;
@@ -101,6 +103,38 @@ class StudentsController extends Controller
         $student->setCentre($centre);
 
         $this->studentFacade->create($student);
+        return $this->responseFactory->successfulJsonResponse((new StudentNormalizer())->normalize($student));
+    }
+
+    /**
+     * @Route("/register", name="registrarAlumno")
+     * @Method("POST")
+     */
+    public function registerAction(Request $request)
+    {
+        $course = $this->courseFacade->find($request->get('course'));
+        $centre = $this->centreFacade->find($request->get('centre'));
+        $parents = $request->request->get('nameParents');
+
+        $student = new Student();
+        $student->setName($request->request->get('name'));
+        $student->setSurname($request->request->get('surname'));
+        $student->setCourse($course);
+        $student->setCentre($centre);
+
+        $this->studentFacade->create($student);
+
+        if ($parents != null) {
+            foreach ($parents as $telephoneParent) {
+                echo $telephoneParent;
+                $parent = $this->progenitorFacade->findByTelephone($telephoneParent);
+                $student->addParent($parent);
+                $this->studentFacade->edit();
+                $parent->addChild($student);
+                $this->progenitorFacade->edit();
+            }
+        }
+
         return $this->responseFactory->successfulJsonResponse((new StudentNormalizer())->normalize($student));
     }
 
