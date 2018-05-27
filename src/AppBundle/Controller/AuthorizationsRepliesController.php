@@ -47,7 +47,7 @@ class AuthorizationsRepliesController extends Controller
      * @Route("", name="respuestaAutorizacion")
      * @Method("POST")
      */
-    public function replyAuthorizationAction(Request $request)
+    public function createReplyAuthorizationAction(Request $request)
     {
         $authorization = $this->authorizationFacade->find($request->request->get('authorization'));
         $parent = $this->progenitorFacade->find($request->request->get('parent'));

@@ -2,60 +2,57 @@
 /**
  * Created by PhpStorm.
  * User: danielromerocalero
- * Date: 26/5/18
- * Time: 10:55
+ * Date: 27/5/18
+ * Time: 13:45
  */
 
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Attachment;
-use AppBundle\Entity\Authorization;
-use AppBundle\Entity\Student;
-use AppBundle\Entity\Centre;
-use AppBundle\Entity\Message;
-use AppBundle\Normalizers\AuthorizationNormalizer;
+use AppBundle\Entity\Circular;
+use AppBundle\Normalizers\CircularNormalizer;
 use AppBundle\Services\Facades\AttachmentFacade;
-use AppBundle\Services\Facades\AuthorizationFacade;
-use AppBundle\Services\Facades\StudentFacade;
 use AppBundle\Services\Facades\CentreFacade;
+use AppBundle\Services\Facades\CircularFacade;
+use AppBundle\Services\Facades\StudentFacade;
 use AppBundle\Services\ResponseFactory;
 use AppBundle\Services\Utils;
+use DateTime;
+use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
-use DateTime;
-use DateTimeZone;
 
 /**
- * @Route("/authorizations")
+ * @Route("/circulars")
  */
-class AuthorizationsController extends Controller
+class CircularsController extends Controller
 {
     private $studentFacade;
-    private $authorizationFacade;
+    private $circularFacade;
     private $attachmentFacade;
     private $centreFacade;
     private $responseFactory;
     private $utils;
 
     public function __construct(StudentFacade $studentFacade,
-                                AuthorizationFacade $authorizationFacade,
-                                AttachmentFacade $attachmentFacade,
+                                CircularFacade $circularFacade,
                                 CentreFacade $centreFacade,
+                                AttachmentFacade $attachmentFacade,
                                 ResponseFactory $responseFactory,
                                 Utils $utils)
     {
         $this->studentFacade = $studentFacade;
-        $this->authorizationFacade = $authorizationFacade;
-        $this->attachmentFacade = $attachmentFacade;
+        $this->circularFacade = $circularFacade;
         $this->centreFacade = $centreFacade;
+        $this->attachmentFacade = $attachmentFacade;
         $this->responseFactory = $responseFactory;
         $this->utils = $utils;
     }
 
     /**
-     * @Route("/{id}", name="listarAutorizacionesDelCentro")
+     * @Route("/{id}", name="listarCircularesDelCentro")
      * @Method("GET")
      */
     public function getAction(Request $request, $id)
@@ -63,16 +60,16 @@ class AuthorizationsController extends Controller
         $centre = $this->centreFacade->find($id);
 
         return $this->responseFactory->successfulJsonResponse(
-            ['authorizations' =>
+            ['circulars' =>
                 $this->utils->serializeArray(
-                    $centre->getMessagesOfType('Authorization'), new AuthorizationNormalizer()
+                    $centre->getMessagesOfType('Circular'), new CircularNormalizer()
                 )
             ]
         );
     }
 
     /**
-     * @Route("", name="crearAutorizacion")
+     * @Route("", name="crearCircular")
      * @Method("POST")
      */
     public function createAction(Request $request)
@@ -80,46 +77,41 @@ class AuthorizationsController extends Controller
         $centre = $this->centreFacade->find($request->get('centre'));
         // TODO: enviar date actual cuando se clica en boton desde front_end
         $sendingDate = new DateTime('2000-01-01', new DateTimeZone('Atlantic/Canary'));
-        $limitDate = date_create_from_format('Y-m-d G:i:s', $request->request->get('limitDate') . '23:59:59', new DateTimeZone('UTC'));
-        $authorization = new Authorization(
+        $circular = new Circular(
             $request->request->get('subject'),
             $request->request->get('message'),
             $sendingDate,
-            $centre,
-            $limitDate
+            $centre
         );
-        $this->authorizationFacade->create($authorization);
+        $this->circularFacade->create($circular);
 
         // TODO: renombrar el fichero que se guarda con id unico
-            $tempFile = $_FILES['file']['tmp_name'];
-            $fileName = $_FILES['file']['name'];
+        $tempFile = $_FILES['file']['tmp_name'];
+        $fileName = $_FILES['file']['name'];
         if ($tempFile != null) {
-            $filePath = $_SERVER['DOCUMENT_ROOT'] .'/hermerest_backend/src/AppBundle/Uploads/Authorizations/'. $fileName;
+            $filePath = $_SERVER['DOCUMENT_ROOT'] .'/hermerest_backend/src/AppBundle/Uploads/Circulars/'. $fileName;
             move_uploaded_file($tempFile, $filePath);
             $attachment = new Attachment(
                 $fileName,
-                $authorization
+                $circular
             );
             $this->attachmentFacade->create($attachment);
         }
 
-        $this->sendAuthorization($request->request->get('studentsIds'), $authorization, $this->authorizationFacade);
+        $this->sendCircular($request->request->get('studentsIds'), $circular, $this->circularFacade);
 
         return $this->responseFactory->successfulJsonResponse([
-            'id' => $authorization->getId(),
-            'limitDate' => $authorization->getLimitDate(),
-            'subject' => $authorization->getSubject(),
+            'id' => $circular->getId(),
+            'subject' => $circular->getSubject(),
         ]);
     }
 
-
-    private function sendAuthorization($studentsIds, $authorization, $authorizationFacade)
+    private function sendCircular($studentsIds, $circular, $circularFacade)
     {
         foreach ($studentsIds as $studentId) {
             $student = $this->studentFacade->find($studentId);
-            $authorization->addStudent($student);
-            $authorizationFacade->edit();
+            $circular->addStudent($student);
+            $circularFacade->edit();
         }
     }
-
 }

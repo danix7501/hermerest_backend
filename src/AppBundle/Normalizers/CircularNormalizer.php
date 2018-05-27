@@ -2,19 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: danielromerocalero
- * Date: 26/5/18
- * Time: 13:21
+ * Date: 27/5/18
+ * Time: 13:50
  */
 
 namespace AppBundle\Normalizers;
 
-use AppBundle\Entity\Message;
+
+use AppBundle\Entity\Circular;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-
-class MessageNormalizer implements NormalizerInterface
+class CircularNormalizer implements NormalizerInterface
 {
-
     public function normalize($object, $format = null, array $context = array())
     {
         return [
@@ -25,9 +24,8 @@ class MessageNormalizer implements NormalizerInterface
             'attachments' => count($object->getAttachments()) == 0 ? null : (new AttachmentNormalizer())->normalize($object->getAttachments()[0])
         ];
     }
-
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof Message;
+        return $data instanceof Circular;
     }
 }

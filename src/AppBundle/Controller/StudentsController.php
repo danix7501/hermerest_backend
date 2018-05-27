@@ -114,7 +114,7 @@ class StudentsController extends Controller
     {
         $course = $this->courseFacade->find($request->get('course'));
         $centre = $this->centreFacade->find($request->get('centre'));
-        $parents = $request->request->get('nameParents');
+        $parents = $request->request->get('telephoneParents');
 
         $student = new Student();
         $student->setName($request->request->get('name'));
@@ -125,8 +125,8 @@ class StudentsController extends Controller
         $this->studentFacade->create($student);
 
         if ($parents != null) {
+            $parents = explode(',', $parents);
             foreach ($parents as $telephoneParent) {
-                echo $telephoneParent;
                 $parent = $this->progenitorFacade->findByTelephone($telephoneParent);
                 $student->addParent($parent);
                 $this->studentFacade->edit();
@@ -197,7 +197,6 @@ class StudentsController extends Controller
             $parent->addCentre($centre);
             $this->centreFacade->edit();
         }
-
 
         return $this->responseFactory->successfulJsonResponse(
             ['parents' =>
