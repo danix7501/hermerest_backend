@@ -9,6 +9,7 @@ namespace AppBundle\Normalizers;
 
 use AppBundle\Entity\Centre;
 use AppBundle\Entity\Course;
+use AppBundle\Services\Utils;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class CourseNormalizer implements NormalizerInterface
@@ -20,7 +21,7 @@ class CourseNormalizer implements NormalizerInterface
             'id' => $object->getId(),
             'name' => $object->getName(),
             'centre' => (new CentreNormalizer())->normalize($object->getCentre()),
-            'numberOfStudents' => count($object->getStudents())
+            'numberOfStudents' => count($object->getStudents()),
         ];
     }
 

@@ -291,11 +291,13 @@ class Progenitor
     private function addChildMessagesToChildrenMessages($childMessages, $childrenMessages, $type, $child)
     {
         foreach ($childMessages as $childMessage) {
-            if ($type != "Authorization" && $childrenMessages->contains($childMessage)) continue;
-            $childrenMessages->add($type == "Authorization" ?
-                ['message' => $childMessage, 'child' => $child] :
-                $childMessage
-            );
+            if ($childrenMessages->contains($childMessage)) continue;
+            $childrenMessages->add($childMessage);
+//            if ($type != "Authorization" && $childrenMessages->contains($childMessage)) continue;
+//            $childrenMessages->add($type == "Authorization" ?
+//                ['message' => $childMessage, 'child' => $child] :
+//                $childMessage
+//            );
         }
     }
 }

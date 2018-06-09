@@ -8,6 +8,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Normalizers\AuthorizationNormalizer;
+use AppBundle\Normalizers\CircularNormalizer;
+use AppBundle\Normalizers\PollNormalizer;
 use AppBundle\Normalizers\StudentNormalizer;
 use AppBundle\Services\Facades\ProgenitorFacade;
 use AppBundle\Services\Facades\StudentFacade;
@@ -53,5 +56,45 @@ class ProgenitoresController extends Controller
                 )
             ]
         );
+    }
+
+    /**
+     * @Route("/{id}/messages", name="listarMensajesDelPadre")
+     * @Method("GET")
+     */
+    public function getMessagesAction(Request $request, $id)
+    {
+        $parent = $this->progenitorFacade->find($id);
+        if ($parent == null) return $this->responseFactory->unsuccessfulJsonResponse("El padre no existe");
+
+        if ($request->query->get('type') == 'Circular') {
+            return $this->responseFactory->successfulJsonResponse(
+                ['circulars' =>
+                    $this->utils->serializeArray(
+                        $parent->getMessagesOfType('Circular'), new CircularNormalizer()
+                    )
+                ]
+            );
+        }
+
+        if ($request->query->get('type') == 'Poll') {
+            return $this->responseFactory->successfulJsonResponse(
+                ['polls' =>
+                    $this->utils->serializeArray(
+                        $parent->getMessagesOfType('Poll'), new PollNormalizer()
+                    )
+                ]
+            );
+        }
+
+        if ($request->query->get('type') == 'Authorization') {
+            return $this->responseFactory->successfulJsonResponse(
+                ['authorizations' =>
+                    $this->utils->serializeArray(
+                        $parent->getMessagesOfType('Authorization'), new AuthorizationNormalizer()
+                    )
+                ]
+            );
+        }
     }
 }

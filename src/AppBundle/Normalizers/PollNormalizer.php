@@ -23,6 +23,7 @@ class PollNormalizer implements NormalizerInterface
             'message' => $object->getMessage(),
             'sendingDate' => $object->getSendingDate(),
             'limitDate' => $object->getLimitDate(),
+            'multiple' => $object->getMultipleChoice(),
             'options' => (new Utils())->serializeArray($object->getPollOptions(), new PollOptionNormalizer()),
             'attachments' => count($object->getAttachments()) == 0 ? null : (new AttachmentNormalizer())->normalize($object->getAttachments()[0])
         ];

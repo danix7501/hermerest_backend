@@ -79,7 +79,7 @@ class AuthorizationsController extends Controller
     {
         $centre = $this->centreFacade->find($request->get('centre'));
         // TODO: enviar date actual cuando se clica en boton desde front_end
-        $sendingDate = new DateTime('2000-01-01', new DateTimeZone('Atlantic/Canary'));
+        $sendingDate = date_create_from_format('Y-m-d G:i:s', $request->request->get('sendingDate'), new DateTimeZone('Atlantic/Canary'));
         $limitDate = date_create_from_format('Y-m-d G:i:s', $request->request->get('limitDate') . '23:59:59', new DateTimeZone('UTC'));
         $authorization = new Authorization(
             $request->request->get('subject'),
