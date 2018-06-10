@@ -182,7 +182,8 @@ class ProgenitoresController extends Controller
                     'sendingDate' => $message['message']->getSendingDate()->format('Y-m-d H:i:s'),
                     'attachment' => count($message['message']->getAttachments()) > 0 ? true : false,
                     'limitDate' => $message['message']->getlimitDate()->format('Y-m-d H:i:s'),
-                    'studentId' => $message['child']->getId()
+                    'studentId' => $message['child']->getId(),
+                    'studentName' => $message['child']->getName()
                 ] :
                 [
                     'id' => $message->getId(),
