@@ -10,7 +10,8 @@ namespace AppBundle\Normalizers;
 
 
 use AppBundle\Entity\Authorization;
-use Proxies\__CG__\AppBundle\Entity\Student;
+use AppBundle\Entity\Student;
+use AppBundle\Services\Utils;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class AuthorizationNormalizer implements NormalizerInterface
