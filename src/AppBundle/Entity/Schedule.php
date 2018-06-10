@@ -4,7 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\ManyToOne;
 /**
  * Schedule
  * @ORM\Entity
@@ -22,7 +22,7 @@ class Schedule
     private $id;
 
     /**
-     * @OneToOne(targetEntity="Teacher")
+     * @ManyToOne(targetEntity="Teacher", inversedBy="schedules")
      * @JoinColumn(name="id_teacher", referencedColumnName="id")
      */
     private $teacher;
@@ -37,17 +37,24 @@ class Schedule
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="time_from", type="datetime")
+     * @ORM\Column(name="time_from", type="time")
      */
     private $timeFrom;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="time_to", type="datetime")
+     * @ORM\Column(name="time_to", type="time")
      */
     private $timeTo;
 
+    public function __construct($schedule = null, $timeFrom = null, $timeTo = null, Teacher $teacher = null)
+    {
+        $this->teacher = $teacher;
+        $this->schedule = $schedule;
+        $this->timeFrom = $timeFrom;
+        $this->timeTo = $timeTo;
+    }
 
     /**
      * Get id
@@ -62,11 +69,11 @@ class Schedule
     /**
      * Set teacher
      *
-     * @param integer $teacher
+     * @param Teacher $teacher
      *
      * @return Schedule
      */
-    public function setTeacher($teacher)
+    public function setTeacher(Teacher $teacher = null)
     {
         $this->teacher = $teacher;
 
@@ -76,7 +83,7 @@ class Schedule
     /**
      * Get teacher
      *
-     * @return int
+     * @return Teacher
      */
     public function getTeacher()
     {

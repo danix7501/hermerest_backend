@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
@@ -40,7 +41,7 @@ class Teacher
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Progenitor", inversedBy="teachers")
+     * @ORM\ManyToMany(targetEntity="Progenitor", inversedBy="teacher")
      * @ORM\OrderBy({"name" = "ASC"})
      * @ORM\JoinTable(name="teacher_parent",
      *      joinColumns={@ORM\JoinColumn(name="teacher", referencedColumnName="id", onDelete="cascade")},
@@ -49,10 +50,16 @@ class Teacher
      */
     private $parents;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Schedule", mappedBy="teacher")
+     */
+    private $schedules;
+
 
     public function __construct($name = null)
     {
         $this->parents = new ArrayCollection();
+        $this->schedules = new ArrayCollection();
         $this->name = $name;
     }
 
@@ -137,5 +144,14 @@ class Teacher
     {
         return $this->name;
     }
-}
 
+    /**
+     * Get schedules
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSchedules()
+    {
+        return $this->schedules;
+    }
+}
