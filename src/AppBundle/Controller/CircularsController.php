@@ -52,23 +52,6 @@ class CircularsController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="listarCircularesDelCentro")
-     * @Method("GET")
-     */
-    public function getAction(Request $request, $id)
-    {
-        $centre = $this->centreFacade->find($id);
-
-        return $this->responseFactory->successfulJsonResponse(
-            ['circulars' =>
-                $this->utils->serializeArray(
-                    $centre->getMessagesOfType('Circular'), new CircularNormalizer()
-                )
-            ]
-        );
-    }
-
-    /**
      * @Route("", name="crearCircular")
      * @Method("POST")
      */
@@ -103,6 +86,23 @@ class CircularsController extends Controller
         return $this->responseFactory->successfulJsonResponse([
             'id' => $circular->getId(),
             'subject' => $circular->getSubject(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="verCircular")
+     * @Method("GET")
+     */
+    public function seeAction(Request $request, $id)
+    {
+        $circular = $this->circularFacade->find($id);
+        return $this->responseFactory->successfulJsonResponse([
+            'id' => $circular->getId(),
+            'subject' => $circular->getSubject(),
+            'message' => $circular->getMessage(),
+            'sendingDate' => $circular->getSendingDate()->format('Y-m-d G:i:s'),
+            'attachmentId' => $circular->getAttachments()[0]->getId(),
+            'attachmentName' => $circular->getAttachments()[0]->getName()
         ]);
     }
 

@@ -27,6 +27,15 @@ class UserFacade extends AbstractFacade
         );
     }
 
+    public function findByUsername($username)
+    {
+        return $this->entityManager->getRepository($this->entityName)->findOneBy(
+            array(
+                "username" => $username
+            )
+        );
+    }
+
     public function getAssociatedUserFor($user)
     {
         return $this->entityManager->getRepository('AppBundle:' . ucfirst($user->getRol()))

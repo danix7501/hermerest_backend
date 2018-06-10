@@ -8,6 +8,8 @@ use AppBundle\Entity\PollReply;
 use AppBundle\Entity\Student;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToOne;
 
 /**
  * @ORM\Entity
@@ -21,6 +23,12 @@ class Progenitor
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @OneToOne(targetEntity="User")
+     * @JoinColumn(name="id_user", referencedColumnName="id")
+     */
+    private $user;
 
     /**
      * @ORM\Column(type="string", length=50, name="name", nullable=false)
@@ -54,9 +62,16 @@ class Progenitor
      */
     private $pollReplies;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Teacher", mappedBy="parents")
+     * * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $teachers;
+
     public function __construct($name = null, $telephone = null)
     {
         $this->children = new ArrayCollection();
+        $this->teachers = new ArrayCollection();
         $this->centres = new ArrayCollection();
         $this->authorizationReplies = new ArrayCollection();
         $this->pollReplies = new ArrayCollection();
@@ -72,6 +87,30 @@ class Progenitor
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set user
+     *
+     * @param string $user
+     *
+     * @return Progenitor
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return string
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
     /**

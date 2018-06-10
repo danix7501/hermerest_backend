@@ -12,10 +12,12 @@ use AppBundle\Entity\Attachment;
 use AppBundle\Entity\Poll;
 use AppBundle\Entity\PollOption;
 use AppBundle\Normalizers\PollNormalizer;
+use AppBundle\Normalizers\PollOptionNormalizer;
 use AppBundle\Services\Facades\CentreFacade;
 use AppBundle\Services\Facades\PollFacade;
 use AppBundle\Services\Facades\AttachmentFacade;
 use AppBundle\Services\Facades\PollOptionFacade;
+use AppBundle\Services\Facades\ProgenitorFacade;
 use AppBundle\Services\Facades\StudentFacade;
 use AppBundle\Services\ResponseFactory;
 use AppBundle\Services\Utils;
@@ -37,6 +39,7 @@ class PollsController extends Controller
     private $centreFacade;
     private $attachmentFacade;
     private $responseFactory;
+    private $progenitorFacade;
     private $utils;
 
     public function __construct(StudentFacade $studentFacade,
@@ -45,6 +48,7 @@ class PollsController extends Controller
                                 CentreFacade $centreFacade,
                                 AttachmentFacade $attachmentFacade,
                                 ResponseFactory $responseFactory,
+                                ProgenitorFacade $progenitorFacade,
                                 Utils $utils)
     {
         $this->studentFacade = $studentFacade;
@@ -52,26 +56,9 @@ class PollsController extends Controller
         $this->pollOptionFacade = $pollOptionFacade;
         $this->centreFacade = $centreFacade;
         $this->attachmentFacade = $attachmentFacade;
+        $this->progenitorFacade = $progenitorFacade;
         $this->responseFactory = $responseFactory;
         $this->utils = $utils;
-    }
-
-    /**
-     * @Route("/{id}", name="listarEncuestasDelCentro")
-     * @Method("GET")
-     */
-    public function getAction(Request $request, $id)
-    {
-        $centre = $this->centreFacade->find($id);
-
-        return $this->responseFactory->successfulJsonResponse(
-            ['polls' =>
-                $this->utils->serializeArray(
-                    $centre->getMessagesOfType('Poll'), new PollNormalizer()
-                )
-
-            ]
-        );
     }
 
     /**
@@ -118,6 +105,28 @@ class PollsController extends Controller
         ]);
 
     }
+
+    /**
+     * @Route("/{id}", name="verEncuesta")
+     * @Method("GET")
+     */
+    public function seeAction(Request $request, $id)
+    {
+        $poll = $this->pollFacade->find($id);
+        $parent = $this->progenitorFacade->find($request->query->get("parent"));
+        return $this->responseFactory->successfulJsonResponse([
+            'subject' => $poll->getSubject(),
+            'message' => $poll->getMessage(),
+            'sendingDate' => $poll->getSendingDate()->format('Y-m-d H:i:s'),
+            'limitDate' => $poll->getLimitDate()->format('Y-m-d H:i:s'),
+            'options' => $this->utils->serializeArray($poll->getPollOptions(), new PollOptionNormalizer()),
+            'attachmentId' => $poll->getAttachments()[0]->getId(),
+            'attachmentName' => $poll->getAttachments()[0]->getName(),
+            'multiple' => $poll->getMultipleChoice(),
+            'replied' => $poll->isRepliedBy($parent)
+        ]);
+    }
+
 
     private function sendPoll($studentsIds, $authorization, $authorizationFacade)
     {

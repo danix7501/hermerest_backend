@@ -16,6 +16,7 @@ use AppBundle\Entity\Message;
 use AppBundle\Normalizers\AuthorizationNormalizer;
 use AppBundle\Services\Facades\AttachmentFacade;
 use AppBundle\Services\Facades\AuthorizationFacade;
+use AppBundle\Services\Facades\ProgenitorFacade;
 use AppBundle\Services\Facades\StudentFacade;
 use AppBundle\Services\Facades\CentreFacade;
 use AppBundle\Services\ResponseFactory;
@@ -34,6 +35,7 @@ class AuthorizationsController extends Controller
 {
     private $studentFacade;
     private $authorizationFacade;
+    private $progenitorFacade;
     private $attachmentFacade;
     private $centreFacade;
     private $responseFactory;
@@ -41,6 +43,7 @@ class AuthorizationsController extends Controller
 
     public function __construct(StudentFacade $studentFacade,
                                 AuthorizationFacade $authorizationFacade,
+                                ProgenitorFacade $progenitorFacade,
                                 AttachmentFacade $attachmentFacade,
                                 CentreFacade $centreFacade,
                                 ResponseFactory $responseFactory,
@@ -48,27 +51,11 @@ class AuthorizationsController extends Controller
     {
         $this->studentFacade = $studentFacade;
         $this->authorizationFacade = $authorizationFacade;
+        $this->progenitorFacade = $progenitorFacade;
         $this->attachmentFacade = $attachmentFacade;
         $this->centreFacade = $centreFacade;
         $this->responseFactory = $responseFactory;
         $this->utils = $utils;
-    }
-
-    /**
-     * @Route("/{id}", name="listarAutorizacionesDelCentro")
-     * @Method("GET")
-     */
-    public function getAction(Request $request, $id)
-    {
-        $centre = $this->centreFacade->find($id);
-
-        return $this->responseFactory->successfulJsonResponse(
-            ['authorizations' =>
-                $this->utils->serializeArray(
-                    $centre->getMessagesOfType('Authorization'), new AuthorizationNormalizer()
-                )
-            ]
-        );
     }
 
     /**

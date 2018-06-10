@@ -9,7 +9,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Centre;
+use AppBundle\Normalizers\AuthorizationNormalizer;
+use AppBundle\Normalizers\CircularNormalizer;
 use AppBundle\Normalizers\CourseNormalizer;
+use AppBundle\Normalizers\PollNormalizer;
 use AppBundle\Normalizers\ProgenitorNormalizer;
 use AppBundle\Normalizers\StudentNormalizer;
 use AppBundle\Services\Facades\CentreFacade;
@@ -89,6 +92,57 @@ class CentresController extends Controller
             ['students' =>
                 $this->utils->serializeArray(
                     $centro->getStudents(), new StudentNormalizer()
+                )
+            ]
+        );
+    }
+
+    /**
+     * @Route("/{id}/circulars", name="listarCircularesDelCentro")
+     * @Method("GET")
+     */
+    public function getCircularsAction(Request $request, $id)
+    {
+        $centre = $this->centreFacade->find($id);
+
+        return $this->responseFactory->successfulJsonResponse(
+            ['circulars' =>
+                $this->utils->serializeArray(
+                    $centre->getMessagesOfType('Circular'), new CircularNormalizer()
+                )
+            ]
+        );
+    }
+
+    /**
+     * @Route("/{id}/polls", name="listarEncuestasDelCentro")
+     * @Method("GET")
+     */
+    public function getPollsAction(Request $request, $id)
+    {
+        $centre = $this->centreFacade->find($id);
+
+        return $this->responseFactory->successfulJsonResponse(
+            ['polls' =>
+                $this->utils->serializeArray(
+                    $centre->getMessagesOfType('Poll'), new PollNormalizer()
+                )
+
+            ]
+        );
+    }
+
+    /**
+     * @Route("/{id}/authorizations", name="listarAutorizacionesDelCentro")
+     * @Method("GET")
+     */
+    public function getAuthorizationsAction(Request $request, $id)
+    {
+        $centre = $this->centreFacade->find($id);
+        return $this->responseFactory->successfulJsonResponse(
+            ['authorizations' =>
+                $this->utils->serializeArray(
+                    $centre->getMessagesOfType('Authorization'), new AuthorizationNormalizer()
                 )
             ]
         );
