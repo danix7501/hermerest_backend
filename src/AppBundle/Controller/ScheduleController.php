@@ -9,7 +9,9 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Appointment;
 use AppBundle\Entity\Schedule;
+use AppBundle\Services\Facades\AppointmentFacade;
 use AppBundle\Services\Facades\ScheduleFacade;
 use AppBundle\Services\Facades\TeacherFacade;
 use AppBundle\Services\ResponseFactory;
@@ -30,16 +32,19 @@ class ScheduleController extends Controller
 {
     private $scheduleFacade;
     private $teacherFacade;
+    private $appointmentFacade;
     private $responseFactory;
     private $utils;
 
     public function __construct(ScheduleFacade $scheduleFacade,
                                 TeacherFacade $teacherFacade,
+                                AppointmentFacade $appointmentFacade,
                                 ResponseFactory $responseFactory,
                                 Utils $utils)
     {
         $this->scheduleFacade = $scheduleFacade;
         $this->teacherFacade = $teacherFacade;
+        $this->appointmentFacade = $appointmentFacade;
         $this->responseFactory = $responseFactory;
         $this->utils = $utils;
     }
@@ -93,6 +98,19 @@ class ScheduleController extends Controller
         $this->scheduleFacade->edit();
 
         return $this->responseFactory->successfulJsonResponse('Horario de tutoría modificado con éxito');
+    }
+
+    /**
+     * @Route("/{id}", name="eliminarHorarioDeTutoria")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $schedule = $this->scheduleFacade->find($id);
+        $appointmentSchedule = $this->appointmentFacade->findBySchedule($schedule);
+        if ($appointmentSchedule != null) return $this->responseFactory->unsuccessfulJsonResponse('Este horario tiene una cita asociada');
+        $this->scheduleFacade->remove($schedule);
+        return $this->responseFactory->successfulJsonResponse('Horario eliminado correctamente');
     }
 
 
