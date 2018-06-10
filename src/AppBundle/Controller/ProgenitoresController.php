@@ -92,6 +92,19 @@ class ProgenitoresController extends Controller
     }
 
     /**
+     * @Route("/{id}/centres", name="desasociarCentroPadre")
+     * @Method("DELETE")
+     */
+    public function desassociatedCentreAction($id){
+        $parent = $this->progenitorFacade->find($id);
+        $this->progenitorFacade->clearCentresOf($parent);
+        return $this->responseFactory->successfulJsonResponse([
+            'Centros totales' => $parent->getCentres()->count()
+        ]);
+    }
+
+
+    /**
      * @Route("/{id}", name="editarPadre")
      * @Method("PUT")
      */
