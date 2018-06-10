@@ -194,7 +194,13 @@ class ProgenitoresController extends Controller
         $parent = $this->progenitorFacade->findByTelephone($request->query->get('telephone'));
         if ($parent == null) return $this->responseFactory->unsuccessfulJsonResponse(['found' => false]);
 
-        return $this->responseFactory->successfulJsonResponse(['found' => true]);
+        return $this->responseFactory->successfulJsonResponse([
+            'id' => $parent->getId(),
+            'telephone' => $parent->getTelephone(),
+            'name' => $parent->getName(),
+            'smsCode' => '123456',
+            'found' => true,
+        ]);
     }
 
     /**
