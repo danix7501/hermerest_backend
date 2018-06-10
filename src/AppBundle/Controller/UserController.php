@@ -106,7 +106,7 @@ class UserController extends Controller
               $this->progenitorFacade->create($registerParent);
 
                 return $this->responseFactory->successfulJsonResponse(
-                    $this->jwtAuth->encodeUser($user)
+                    $this->jwtAuth->encodeUserParent($user)
                 );
             }
         } else {

@@ -46,6 +46,23 @@ class JwtAuth
         ], $this->key, 'HS256');
     }
 
+    public function encodeUserParent($user)
+    {
+        $associatedUser = $this->userFacade->getAssociatedUserFor($user);
+        return JWT::encode([
+            "sub" => $user->getId(),
+            "id" => $associatedUser->getId(),
+            "name" => $associatedUser->getName(),
+            "telephone" => $associatedUser->getTelephone(),
+            "username" => $user->getUsername(),
+            "found" => true,
+            "smsCode" => '123456',
+            "rol" => $user->getRol(),
+            "iat" => time(),
+            "exp" => time() + (7 * 24 * 60 * 60 * 10)
+        ], $this->key, 'HS256');
+    }
+
     /**
      * @param $token
      * @return object
