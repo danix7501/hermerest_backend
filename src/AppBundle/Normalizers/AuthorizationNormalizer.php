@@ -10,8 +10,6 @@ namespace AppBundle\Normalizers;
 
 
 use AppBundle\Entity\Authorization;
-use AppBundle\Entity\Student;
-use AppBundle\Services\Utils;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class AuthorizationNormalizer implements NormalizerInterface
@@ -24,7 +22,6 @@ class AuthorizationNormalizer implements NormalizerInterface
             'message' => $object->getMessage(),
             'sendingDate' => $object->getSendingDate(),
             'limitDate' => $object->getLimitDate(),
-            'students' => (new Utils())->serializeArray($object->getStudents(), new StudentNormalizer()),
             'attachments' => count($object->getAttachments()) == 0 ? null : (new AttachmentNormalizer())->normalize($object->getAttachments()[0])
         ];
     }

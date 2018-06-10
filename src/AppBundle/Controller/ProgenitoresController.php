@@ -166,36 +166,33 @@ class ProgenitoresController extends Controller
     {
         $parent = $this->progenitorFacade->find($id);
         if ($parent == null) return $this->responseFactory->unsuccessfulJsonResponse("El padre no existe");
+        $messages = $parent->getMessagesOfType($request->query->get('type'));
+        return $this->responseFactory->successfulJsonResponse($this->getMessagesArray($messages, $request->query->get('type')));
 
-        if ($request->query->get('type') == 'Circular') {
-            return $this->responseFactory->successfulJsonResponse(
-                ['circulars' =>
-                    $this->utils->serializeArray(
-                        $parent->getMessagesOfType('Circular'), new CircularNormalizer()
-                    )
-                ]
-            );
-        }
+    }
 
-        if ($request->query->get('type') == 'Poll') {
-            return $this->responseFactory->successfulJsonResponse(
-                ['polls' =>
-                    $this->utils->serializeArray(
-                        $parent->getMessagesOfType('Poll'), new PollNormalizer()
-                    )
-                ]
-            );
+    private function getMessagesArray($messages, $type): array
+    {
+        $messagesArray = [];
+        foreach ($messages as $message) {
+            array_push($messagesArray, $type == 'Authorization' ?
+                [
+                    'id' => $message['message']->getId(),
+                    'subject' => $message['message']->getSubject(),
+                    'sendingDate' => $message['message']->getSendingDate()->format('Y-m-d H:i:s'),
+                    'attachment' => count($message['message']->getAttachments()) > 0 ? true : false,
+                    'limitDate' => $message['message']->getlimitDate()->format('Y-m-d H:i:s'),
+                    'studentId' => $message['child']->getId()
+                ] :
+                [
+                    'id' => $message->getId(),
+                    'subject' => $message->getSubject(),
+                    'sendingDate' => $message->getSendingDate()->format('Y-m-d H:i:s'),
+                    'attachment' => count($message->getAttachments()) > 0 ? true : false,
+                    'limitDate' => ($type == 'Poll') ? $message->getlimitDate()->format('Y-m-d H:i:s') : null,
+                ]);
         }
-
-        if ($request->query->get('type') == 'Authorization') {
-            return $this->responseFactory->successfulJsonResponse(
-                ['authorizations' =>
-                    $this->utils->serializeArray(
-                        $parent->getMessagesOfType('Authorization'), new AuthorizationNormalizer()
-                    )
-                ]
-            );
-        }
+        return $messagesArray;
     }
 
     /**
