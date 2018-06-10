@@ -16,6 +16,7 @@ use AppBundle\Normalizers\PollNormalizer;
 use AppBundle\Normalizers\ProgenitorNormalizer;
 use AppBundle\Normalizers\StudentNormalizer;
 use AppBundle\Services\Facades\CentreFacade;
+use AppBundle\Services\Facades\ProgenitorFacade;
 use AppBundle\Services\ResponseFactory;
 use AppBundle\Services\Utils;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,16 +32,40 @@ class CentresController extends Controller
 {
 
     private $centreFacade;
+    private $progenitorFacade;
     private $responseFactory;
     private $utils;
 
     public function __construct(CentreFacade $centreFacade,
+                                ProgenitorFacade $progenitorFacade,
                                 ResponseFactory $responseFactory,
                                 Utils $utils)
     {
         $this->centreFacade = $centreFacade;
+        $this->progenitorFacade = $progenitorFacade;
         $this->responseFactory = $responseFactory;
         $this->utils = $utils;
+    }
+
+    /**
+     * @Route("/{id}", name="listarCentrosContienePadre")
+     * @Method("GET")
+     */
+    public function getCentresAction($id)
+    {
+        $parentCentres = $this->progenitorFacade->find($id)->getCentres();
+        $centres = $this->centreFacade->findAll();
+        $centresContent = array();
+        foreach ($centres as $centre)
+        {
+            array_push($centresContent,
+                [
+                    'id'=>$centre->getId(),
+                    'name' => $centre->getName(),
+                    'isSet' => $parentCentres->contains($centre)
+                ]);
+        }
+        return $this->responseFactory->successfulJsonResponse($centresContent);
     }
 
     /**
