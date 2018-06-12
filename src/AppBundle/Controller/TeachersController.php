@@ -8,12 +8,14 @@
 
 namespace AppBundle\Controller;
 
-
+use AppBundle\Entity\Schedule;
 use AppBundle\Normalizers\ScheduleNormalizer;
 use AppBundle\Services\Facades\ScheduleFacade;
 use AppBundle\Services\Facades\TeacherFacade;
 use AppBundle\Services\ResponseFactory;
 use AppBundle\Services\Utils;
+use DateTime;
+use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -41,18 +43,33 @@ class TeachersController extends Controller
     }
 
     /**
-     * @Route("/{id}/schedules", name="listarHorariosDeTutoriaProfesor")
-     * @Method("GET")
-     */
+ * @Route("/{id}/schedules", name="listarHorariosDeTutoriaProfesor")
+ * @Method("GET")
+ */
     public function createAction(Request $request, $id)
     {
         $teacher = $this->teacherFacade->find($id);
+        $schedules = [];
 
-        return $this->responseFactory->successfulJsonResponse(
-            ['schedules' => $this->utils->serializeArray(
+        if ($request->query->get('schedule')) {
+            echo 'entre schedule';
+            foreach ($teacher->getSchedules() as $schedule) {
+                $scheduleAux = $schedule->getSchedule()->format('Y-m-d');
+                if ($scheduleAux == $request->query->get('schedule')){
+                    array_push($schedules, $schedule);
+                }
+            }
+            return $this->responseFactory->successfulJsonResponse(
+                ['schedules' => $this->utils->serializeArray(
+                    $schedules, new ScheduleNormalizer()
+                )
+                ]);
+        } else {
+            return $this->responseFactory->successfulJsonResponse(
+                ['schedules' => $this->utils->serializeArray(
                     $teacher->getSchedules(), new ScheduleNormalizer()
                 )
-        ]);
+                ]);
+        }
     }
-
 }
