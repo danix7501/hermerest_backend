@@ -40,15 +40,6 @@ class Teacher
      */
     private $name;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Progenitor", inversedBy="teacher")
-     * @ORM\OrderBy({"name" = "ASC"})
-     * @ORM\JoinTable(name="teacher_parent",
-     *      joinColumns={@ORM\JoinColumn(name="teacher", referencedColumnName="id", onDelete="cascade")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="parent", referencedColumnName="id", onDelete="cascade")}
-     *      )
-     */
-    private $parents;
 
     /**
      * @ORM\OneToMany(targetEntity="Schedule", mappedBy="teacher")

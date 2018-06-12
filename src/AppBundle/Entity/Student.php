@@ -67,11 +67,21 @@ class Student
      */
     private $authorizationReplies;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Schedule", mappedBy="student")
+     */
+    private $schedules;
+
+
+
+
+
     public function __construct($name = null, $surname = null, Course $course = null, Centre $centre = null)
     {
         $this->parents = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->authorizationReplies = new ArrayCollection();
+        $this->schedules = new ArrayCollection();
         $this->name = $name;
         $this->surname = $surname;
         $this->course = $course;
@@ -324,5 +334,15 @@ class Student
             if ($reply->getStudent() === $this && $reply->getAuthorized()) $yes++;
             if ($reply->getStudent() === $this && !$reply->getAuthorized()) $no++;
         }
+    }
+
+    /**
+     * Get schedules
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSchedules()
+    {
+        return $this->schedules;
     }
 }

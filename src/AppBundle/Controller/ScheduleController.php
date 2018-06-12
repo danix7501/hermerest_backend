@@ -55,25 +55,33 @@ class ScheduleController extends Controller
      */
     public function createAction(Request $request)
     {
-
         $dateFrom = new DateTime($request->request->get('dateFrom'), new DateTimeZone('Atlantic/Canary'));
         $dateTo = new DateTime($request->request->get('dateTo'), new DateTimeZone('Atlantic/Canary'));
         $timeFrom = new DateTime($request->request->get('timeFrom'), new DateTimeZone('Atlantic/Canary'));
         $timeTo = new DateTime($request->request->get('timeTo'), new DateTimeZone('Atlantic/Canary'));
         $daysOfWek = $request->request->get('daysOfWek');
+        $status = $request->request->get('status');
+        $segment = $request->request->get('segment');
         $teacher = $this->teacherFacade->find($request->request->get('teacher'));
-
         while ($dateFrom <= $dateTo) {
             foreach ($daysOfWek as $dayOfWek){
                 if ($dateFrom->format('w') == $dayOfWek){
-                    $checkSchedule = $this->scheduleFacade->checkSchedule($teacher, $dateFrom, $timeFrom, $timeTo);
-                    if ($checkSchedule == null) {
-                        $schedule = new Schedule();
-                        $schedule->setSchedule($dateFrom);
-                        $schedule->setTimeFrom($timeFrom);
-                        $schedule->setTimeTo($timeTo);
-                        $schedule->setTeacher($teacher);
-                        $this->scheduleFacade->create($schedule);
+                    $timeFromAux = clone  $timeFrom;
+                    $timeToAux =  clone $timeFrom;
+                    $timeToAux = $timeToAux->add(new DateInterval('PT' .$segment . 'M'));
+                    while ($timeFromAux < $timeTo) {
+                        $checkSchedule = $this->scheduleFacade->checkSchedule($teacher, $dateFrom, $timeFromAux, $timeToAux);
+                        if ($checkSchedule == null) {
+                            $schedule = new Schedule();
+                            $schedule->setSchedule($dateFrom);
+                            $schedule->setTimeFrom($timeFromAux);
+                            $schedule->setTimeTo($timeToAux);
+                            $schedule->setTeacher($teacher);
+                            $schedule->setStatus($status);
+                            $this->scheduleFacade->create($schedule);
+                        }
+                        $timeFromAux->add(new DateInterval('PT' .$segment . 'M'));
+                        $timeToAux->add(new DateInterval('PT' .$segment . 'M'));
                     }
                 }
             }

@@ -23,9 +23,15 @@ class Schedule
 
     /**
      * @ManyToOne(targetEntity="Teacher", inversedBy="schedules")
-     * @JoinColumn(name="id_teacher", referencedColumnName="id")
+     * @JoinColumn(name="id_teacher", referencedColumnName="id", nullable=false)
      */
     private $teacher;
+
+    /**
+     * @ManyToOne(targetEntity="Student", inversedBy="schedules")
+     * @JoinColumn(name="id_student", referencedColumnName="id")
+     */
+    private $student;
 
     /**
      * @var \DateTime
@@ -48,12 +54,23 @@ class Schedule
      */
     private $timeTo;
 
-    public function __construct($schedule = null, $timeFrom = null, $timeTo = null, Teacher $teacher = null)
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="status", type="integer")
+     */
+    private $status;
+
+
+    public function __construct($schedule = null, $timeFrom = null, $timeTo = null, $status = null, Teacher $teacher = null, Student $student = null)
     {
         $this->teacher = $teacher;
+        $this->student = $student;
         $this->schedule = $schedule;
         $this->timeFrom = $timeFrom;
         $this->timeTo = $timeTo;
+        $this->status = $status;
+
     }
 
     /**
@@ -88,6 +105,30 @@ class Schedule
     public function getTeacher()
     {
         return $this->teacher;
+    }
+
+    /**
+     * Set student
+     *
+     * @param Student $student
+     *
+     * @return Schedule
+     */
+    public function setStudent(Student $student = null)
+    {
+        $this->student = $student;
+
+        return $this;
+    }
+
+    /**
+     * Get student
+     *
+     * @return Student
+     */
+    public function getStudent()
+    {
+        return $this->student;
     }
 
     /**
@@ -160,6 +201,31 @@ class Schedule
     public function getTimeTo()
     {
         return $this->timeTo;
+    }
+
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     *
+     * @return integer
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }
 

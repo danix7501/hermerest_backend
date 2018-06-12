@@ -40,12 +40,20 @@ class Course
      */
     private $students;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Teacher")
+     * @ORM\JoinColumn(name="teacher", referencedColumnName="id", nullable=false, onDelete="cascade")
+     */
+    private $teacher;
 
-    public function __construct($name = null, Centre $centre = null)
+
+
+    public function __construct($name = null, Centre $centre = null, Teacher $teacher)
     {
         $this->students = new ArrayCollection();
         $this->name = $name;
         $this->centre = $centre;
+        $this->teacher = $teacher;
     }
 
     /**
@@ -138,5 +146,29 @@ class Course
     public function getStudents()
     {
         return $this->students;
+    }
+
+    /**
+     * Set teacher
+     *
+     * @param string $teacher
+     *
+     * @return Teacher
+     */
+    public function setTeacher(Teacher $teacher)
+    {
+        $this->name = $teacher;
+
+        return $this;
+    }
+
+    /**
+     * Get teacher
+     *
+     * @return Teacher
+     */
+    public function getTeacher()
+    {
+        return $this->teacher;
     }
 }
