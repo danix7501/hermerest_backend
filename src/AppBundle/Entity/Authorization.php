@@ -21,7 +21,7 @@ class Authorization extends Message
 {
 
     /**
-     * @ORM\Column(type="datetimetz", name="limitDate", nullable=false)
+     * @ORM\Column(type="datetime", name="limitDate", nullable=false)
      */
     private $limitDate;
 

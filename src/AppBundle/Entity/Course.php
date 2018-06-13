@@ -48,7 +48,7 @@ class Course
 
 
 
-    public function __construct($name = null, Centre $centre = null, Teacher $teacher)
+    public function __construct($name = null, Centre $centre = null, Teacher $teacher = null)
     {
         $this->students = new ArrayCollection();
         $this->name = $name;
@@ -151,13 +151,13 @@ class Course
     /**
      * Set teacher
      *
-     * @param string $teacher
+     * @param Teacher $teacher
      *
-     * @return Teacher
+     * @return Course
      */
     public function setTeacher(Teacher $teacher)
     {
-        $this->name = $teacher;
+        $this->teacher = $teacher;
 
         return $this;
     }

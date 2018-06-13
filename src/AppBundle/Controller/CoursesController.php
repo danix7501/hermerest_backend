@@ -18,6 +18,7 @@ use AppBundle\Services\Facades\CourseFacade;
 use AppBundle\Services\Facades\CentreFacade;
 use AppBundle\Services\Facades\ProgenitorFacade;
 use AppBundle\Services\Facades\StudentFacade;
+use AppBundle\Services\Facades\TeacherFacade;
 use AppBundle\Services\Utils;
 use AppBundle\Services\ResponseFactory;
 use League\Csv\Reader;
@@ -35,6 +36,7 @@ class CoursesController
     private $centreFacade;
     private $studentFacade;
     private $progenitorFacade;
+    private $teacherFacade;
     private $responseFactory;
     private $utils;
 
@@ -42,6 +44,7 @@ class CoursesController
                                 CentreFacade $centreFacade,
                                 StudentFacade $studentFacade,
                                 ProgenitorFacade $progenitorFacade,
+                                TeacherFacade $teacherFacade,
                                 ResponseFactory $responseFactory,
                                 Utils $utils)
     {
@@ -49,6 +52,7 @@ class CoursesController
         $this->centreFacade = $centreFacade;
         $this->studentFacade = $studentFacade;
         $this->progenitorFacade = $progenitorFacade;
+        $this->teacherFacade = $teacherFacade;
         $this->responseFactory = $responseFactory;
         $this->utils = $utils;
     }
@@ -120,11 +124,13 @@ class CoursesController
         $results = $reader->fetchAssoc();
 
         foreach ($results as $row) {
+            $teacher = $this->teacherFacade->findByNameOfTeacher($row['Profesor']);
             $course = $this->courseFacade->findByNameOfCourse($row['NombreCurso']);
             if ($course == null) {
                 $course = new Course();
                 $course->setName($row['NombreCurso']);
                 $course->setCentre($centre);
+                $course->setTeacher($teacher);
                 $this->courseFacade->create($course);
             }
 

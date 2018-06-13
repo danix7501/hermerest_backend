@@ -66,8 +66,8 @@ class AuthorizationsController extends Controller
     {
         $centre = $this->centreFacade->find($request->get('centre'));
         // TODO: enviar date actual cuando se clica en boton desde front_end
-        $sendingDate = date_create_from_format('Y-m-d G:i:s', $request->request->get('sendingDate'), new DateTimeZone('Atlantic/Canary'));
-        $limitDate = date_create_from_format('Y-m-d G:i:s', $request->request->get('limitDate') . '23:59:59', new DateTimeZone('UTC'));
+        $sendingDate = new DateTime($request->request->get('sendingDate'), new DateTimeZone('Atlantic/Canary'));
+        $limitDate = new DateTime($request->request->get('limitDate') . '23:59:59', new DateTimeZone('Atlantic/Canary'));
         $authorization = new Authorization(
             $request->request->get('subject'),
             $request->request->get('message'),
@@ -77,25 +77,29 @@ class AuthorizationsController extends Controller
         );
         $this->authorizationFacade->create($authorization);
 
-        // TODO: renombrar el fichero que se guarda con id unico
+        if (isset($_FILES['file']['tmp_name'])) {
+            // TODO: renombrar el fichero que se guarda con id unico
             $tempFile = $_FILES['file']['tmp_name'];
             $fileName = $_FILES['file']['name'];
-        if ($tempFile != null) {
-            $filePath = $_SERVER['DOCUMENT_ROOT'] .'/hermerest_backend/src/AppBundle/Uploads/Authorizations/'. $fileName;
-            move_uploaded_file($tempFile, $filePath);
-            $attachment = new Attachment(
-                $fileName,
-                $authorization
-            );
-            $this->attachmentFacade->create($attachment);
+            if ($tempFile != null) {
+                $filePath = $_SERVER['DOCUMENT_ROOT'] .'/hermerest_backend/src/AppBundle/Uploads/Authorizations/'. $fileName;
+                move_uploaded_file($tempFile, $filePath);
+                $attachment = new Attachment(
+                    $fileName,
+                    $authorization
+                );
+                $this->attachmentFacade->create($attachment);
+            }
         }
-
         $this->sendAuthorization($request->request->get('studentsIds'), $authorization, $this->authorizationFacade);
 
-        return $this->responseFactory->successfulJsonResponse([
-            'id' => $authorization->getId(),
-            'limitDate' => $authorization->getLimitDate(),
-            'subject' => $authorization->getSubject(),
+        return $this->responseFactory->successfulJsonResponse(
+            ['authorizations' => [
+                'id' => $authorization->getId(),
+                'sendingDate' => $authorization->getSendingDate(),
+                'limitDate' => $authorization->getLimitDate(),
+                'subject' => $authorization->getSubject()
+            ]
         ]);
     }
 

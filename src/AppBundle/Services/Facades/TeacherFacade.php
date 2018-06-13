@@ -17,4 +17,11 @@ class TeacherFacade extends AbstractFacade
     {
         parent::__construct($entityManager, 'AppBundle:Teacher');
     }
+
+    public function findByNameOfTeacher($nameTeacher)
+    {
+        return $this->entityManager->getRepository($this->entityName)->findOneBy(
+            array("name" => $nameTeacher)
+        );
+    }
 }
