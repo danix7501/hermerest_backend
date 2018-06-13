@@ -20,7 +20,9 @@ class ScheduleNormalizer implements NormalizerInterface
             'id' => $object->getId(),
             'schedule' => $object->getSchedule(),
             'timeFrom' => $object->getTimeFrom(),
-            'timeTo' => $object->getTimeTo()
+            'timeTo' => $object->getTimeTo(),
+            'status' => $object->getStatus(),
+            'student' => (new StudentNormalizer())->normalize($object->getStudent())
         ];
     }
     public function supportsNormalization($data, $format = null)

@@ -57,7 +57,7 @@ class CircularsController extends Controller
      */
     public function createAction(Request $request)
     {
-        $centre = $this->centreFacade->find($request->get('centre'));
+        $centre = $this->centreFacade->find($request->request->get('centre'));
         // TODO: enviar date actual cuando se clica en boton desde front_end
         $sendingDate = new DateTime('2000-01-01', new DateTimeZone('Atlantic/Canary'));
         $circular = new Circular(
@@ -68,17 +68,19 @@ class CircularsController extends Controller
         );
         $this->circularFacade->create($circular);
 
-        // TODO: renombrar el fichero que se guarda con id unico
-        $tempFile = $_FILES['file']['tmp_name'];
-        $fileName = $_FILES['file']['name'];
-        if ($tempFile != null) {
-            $filePath = $_SERVER['DOCUMENT_ROOT'] .'/hermerest_backend/src/AppBundle/Uploads/Circulars/'. $fileName;
-            move_uploaded_file($tempFile, $filePath);
-            $attachment = new Attachment(
-                $fileName,
-                $circular
-            );
-            $this->attachmentFacade->create($attachment);
+        if (isset($_FILES['file']['tmp_name'])) {
+            // TODO: renombrar el fichero que se guarda con id unico
+            $tempFile = $_FILES['file']['tmp_name'];
+            $fileName = $_FILES['file']['name'];
+            if ($tempFile != null) {
+                $filePath = $_SERVER['DOCUMENT_ROOT'] . '/hermerest_backend/src/AppBundle/Uploads/Circulars/' . $fileName;
+                move_uploaded_file($tempFile, $filePath);
+                $attachment = new Attachment(
+                    $fileName,
+                    $circular
+                );
+                $this->attachmentFacade->create($attachment);
+            }
         }
 
         $this->sendCircular($request->request->get('studentsIds'), $circular, $this->circularFacade);
@@ -86,6 +88,7 @@ class CircularsController extends Controller
         return $this->responseFactory->successfulJsonResponse([
             'id' => $circular->getId(),
             'subject' => $circular->getSubject(),
+            'sendingDate' => $circular->getSendingDate(),
         ]);
     }
 
@@ -108,6 +111,7 @@ class CircularsController extends Controller
 
     private function sendCircular($studentsIds, $circular, $circularFacade)
     {
+        $studentsIds = explode(',', $studentsIds);
         foreach ($studentsIds as $studentId) {
             $student = $this->studentFacade->find($studentId);
             $circular->addStudent($student);

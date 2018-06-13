@@ -64,7 +64,7 @@ class AuthorizationsController extends Controller
      */
     public function createAction(Request $request)
     {
-        $centre = $this->centreFacade->find($request->get('centre'));
+        $centre = $this->centreFacade->find($request->request->get('centre'));
         // TODO: enviar date actual cuando se clica en boton desde front_end
         $sendingDate = new DateTime($request->request->get('sendingDate'), new DateTimeZone('Atlantic/Canary'));
         $limitDate = new DateTime($request->request->get('limitDate') . '23:59:59', new DateTimeZone('Atlantic/Canary'));
@@ -106,6 +106,7 @@ class AuthorizationsController extends Controller
 
     private function sendAuthorization($studentsIds, $authorization, $authorizationFacade)
     {
+        $studentsIds = explode(',', $studentsIds);
         foreach ($studentsIds as $studentId) {
             $student = $this->studentFacade->find($studentId);
             $authorization->addStudent($student);
