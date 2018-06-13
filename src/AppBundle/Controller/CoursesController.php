@@ -81,7 +81,7 @@ class CoursesController
      */
     public function createAction(Request $request)
     {
-        $centre = $this->centreFacade->find($request->get('centre'));
+        $centre = $this->centreFacade->find($request->request->get('centre'));
 
         $course = new Course();
         $course->setName($request->request->get('name'));
