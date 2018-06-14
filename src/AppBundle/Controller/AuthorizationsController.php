@@ -94,7 +94,7 @@ class AuthorizationsController extends Controller
         $this->sendAuthorization($request->request->get('studentsIds'), $authorization, $this->authorizationFacade);
 
         return $this->responseFactory->successfulJsonResponse(
-            ['authorizations' => [
+            ['authorization' => [
                 'id' => $authorization->getId(),
                 'sendingDate' => $authorization->getSendingDate(),
                 'limitDate' => $authorization->getLimitDate(),

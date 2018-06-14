@@ -67,10 +67,10 @@ class PollsController extends Controller
      */
     public function createAction(Request $request)
     {
-        $centre = $this->centreFacade->find($request->get('centre'));
+        $centre = $this->centreFacade->find($request->request->get('centre'));
         // TODO: enviar date actual cuando se clica en boton desde front_end
-        $sendingDate = new DateTime('2000-01-01', new DateTimeZone('Atlantic/Canary'));
-        $limitDate = date_create_from_format('Y-m-d G:i:s', $request->request->get('limitDate') . '23:59:59', new DateTimeZone('UTC'));
+        $sendingDate = new DateTime($request->request->get('sendingDate'), new DateTimeZone('Atlantic/Canary'));
+        $limitDate = new DateTime($request->request->get('limitDate') . '23:59:59', new DateTimeZone('UTC'));
         $poll = new Poll(
             $request->request->get('subject'),
             $request->request->get('message'),
@@ -95,13 +95,15 @@ class PollsController extends Controller
         }
 
         $this->sendPoll($request->request->get('studentsIds'), $poll, $this->pollFacade);
-
         $this->addOptionsToPoll($request->request->get('pollOptions'), $poll, $this->pollOptionFacade);
 
-        return $this->responseFactory->successfulJsonResponse([
-            'id' => $poll->getId(),
-            'limitDate' => $poll->getLimitDate(),
-            'subject' => $poll->getSubject(),
+        return $this->responseFactory->successfulJsonResponse(
+            [ 'poll' => [
+                'id' => $poll->getId(),
+                'sendingDate' => $poll->getSendingDate(),
+                'limitDate' => $poll->getLimitDate(),
+                'subject' => $poll->getSubject(),
+            ]
         ]);
 
     }
@@ -130,6 +132,8 @@ class PollsController extends Controller
 
     private function sendPoll($studentsIds, $authorization, $authorizationFacade)
     {
+        $studentsIds = explode(',', $studentsIds);
+
         foreach ($studentsIds as $studentId) {
             $student = $this->studentFacade->find($studentId);
             $authorization->addStudent($student);
@@ -139,6 +143,7 @@ class PollsController extends Controller
 
     private function addOptionsToPoll($pollOptions, $poll, $pollOptionFacade)
     {
+        $pollOptions = explode(',', $pollOptions);
         foreach ($pollOptions as $pollOptionText) {
             $polls = new PollOption(
                 $pollOptionText,

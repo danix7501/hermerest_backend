@@ -59,7 +59,7 @@ class CircularsController extends Controller
     {
         $centre = $this->centreFacade->find($request->request->get('centre'));
         // TODO: enviar date actual cuando se clica en boton desde front_end
-        $sendingDate = new DateTime('2000-01-01', new DateTimeZone('Atlantic/Canary'));
+        $sendingDate = new DateTime($request->request->get('sendingDate'), new DateTimeZone('Atlantic/Canary'));
         $circular = new Circular(
             $request->request->get('subject'),
             $request->request->get('message'),
@@ -85,10 +85,12 @@ class CircularsController extends Controller
 
         $this->sendCircular($request->request->get('studentsIds'), $circular, $this->circularFacade);
 
-        return $this->responseFactory->successfulJsonResponse([
+        return $this->responseFactory->successfulJsonResponse(
+            ['circular' => [
             'id' => $circular->getId(),
             'subject' => $circular->getSubject(),
             'sendingDate' => $circular->getSendingDate(),
+            ]
         ]);
     }
 
