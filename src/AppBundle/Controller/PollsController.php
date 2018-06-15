@@ -62,6 +62,15 @@ class PollsController extends Controller
     }
 
     /**
+     * @Route("/replies", name="listarRespuestasAutorizaciones")
+     * @Method("GET")
+     */
+    public function getReplyPollAction(Request $request)
+    {
+
+    }
+
+    /**
      * @Route("", name="crearEncuesta")
      * @Method("POST")
      */

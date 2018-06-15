@@ -14,6 +14,7 @@ use AppBundle\Services\Facades\AuthorizationReplyFacade;
 use AppBundle\Services\Facades\ProgenitorFacade;
 use AppBundle\Services\Facades\StudentFacade;
 use AppBundle\Services\ResponseFactory;
+use AppBundle\Services\Utils;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -27,6 +28,7 @@ class AuthorizationsRepliesController extends Controller
     private $authorizationReplyFacade;
     private $authorizationFacade;
     private $responseFactory;
+    private $utils;
     private $progenitorFacade;
     private $studentFacade;
 
@@ -34,13 +36,16 @@ class AuthorizationsRepliesController extends Controller
                                 AuthorizationFacade $authorizationFacade,
                                 StudentFacade $studentFacade,
                                 ProgenitorFacade $progenitorFacade,
+                                Utils $utils,
                                 ResponseFactory $responseFactory)
     {
         $this->authorizationReplyFacade = $authorizationReplyFacade;
         $this->authorizationFacade = $authorizationFacade;
         $this->studentFacade = $studentFacade;
         $this->progenitorFacade = $progenitorFacade;
+        $this->utils = $utils;
         $this->responseFactory = $responseFactory;
+
     }
 
     /**

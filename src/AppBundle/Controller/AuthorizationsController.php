@@ -14,6 +14,7 @@ use AppBundle\Entity\Student;
 use AppBundle\Entity\Centre;
 use AppBundle\Entity\Message;
 use AppBundle\Normalizers\AuthorizationNormalizer;
+use AppBundle\Normalizers\AuthorizationReplyNormalizer;
 use AppBundle\Services\Facades\AttachmentFacade;
 use AppBundle\Services\Facades\AuthorizationFacade;
 use AppBundle\Services\Facades\ProgenitorFacade;
@@ -56,6 +57,23 @@ class AuthorizationsController extends Controller
         $this->centreFacade = $centreFacade;
         $this->responseFactory = $responseFactory;
         $this->utils = $utils;
+    }
+
+    /**
+     * @Route("/replies", name="listarRespuestasAutorizaciones")
+     * @Method("GET")
+     */
+    public function getReplyAuthorizationAction(Request $request)
+    {
+        $authorization = $this->authorizationFacade->find($request->query->get('authorization'));
+        if ($authorization == null) return $this->responseFactory->unsuccessfulJsonResponse('La autorización no exite');
+        return $this->responseFactory->successfulJsonResponse(
+            ['authorizationsReplies' =>
+                $this->utils->serializeArray(
+                    $authorization->getReplies(), new AuthorizationReplyNormalizer()
+                )
+            ]
+        );
     }
 
     /**

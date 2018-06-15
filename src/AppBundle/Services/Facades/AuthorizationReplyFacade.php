@@ -17,4 +17,10 @@ class AuthorizationReplyFacade extends AbstractFacade
     {
         parent::__construct($entityManager, 'AppBundle:AuthorizationReply');
     }
+    public function findByAuthorization($authorization)
+    {
+        return $this->entityManager->getRepository($this->entityName)->findOneBy(
+            array('authorization' => $authorization)
+        );
+    }
 }
