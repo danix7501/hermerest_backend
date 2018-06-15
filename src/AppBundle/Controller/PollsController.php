@@ -13,6 +13,7 @@ use AppBundle\Entity\Poll;
 use AppBundle\Entity\PollOption;
 use AppBundle\Normalizers\PollNormalizer;
 use AppBundle\Normalizers\PollOptionNormalizer;
+use AppBundle\Normalizers\PollReplyNormalizer;
 use AppBundle\Services\Facades\CentreFacade;
 use AppBundle\Services\Facades\PollFacade;
 use AppBundle\Services\Facades\AttachmentFacade;
@@ -62,12 +63,18 @@ class PollsController extends Controller
     }
 
     /**
-     * @Route("/replies", name="listarRespuestasAutorizaciones")
+     * @Route("/replies", name="listarRespuestasEncuestas")
      * @Method("GET")
      */
     public function getReplyPollAction(Request $request)
     {
-
+        $poll = $this->pollFacade->find($request->query->get('poll'));
+        if ($poll == null) return $this->responseFactory->unsuccessfulJsonResponse('La encuesta no exite');
+        return $this->responseFactory->successfulJsonResponse(
+            [
+                'pollsReplies' => $this->getPollResults($poll)
+            ]
+        );
     }
 
     /**
@@ -160,6 +167,13 @@ class PollsController extends Controller
             );
             $pollOptionFacade->create($polls);
         }
+    }
 
+    private function getPollResults($poll): array
+    {
+        $pollResults = array();
+        foreach ($poll->getPollOptions() as $pollOption)
+            array_push($pollResults, ['optionText' => $pollOption->getText(), 'countReplies' => count($pollOption->getReplies())]);
+        return $pollResults;
     }
 }
