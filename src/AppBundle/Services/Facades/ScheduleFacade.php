@@ -28,9 +28,11 @@ class ScheduleFacade extends AbstractFacade
         );
     }
 
-    public function findSchedulesByDate($schedule) {
-        return $this->entityManager->getRepository($this->entityName)->findOneBy([
-                "schedule" => $schedule
+
+    public function findSchedulesByDateAnTeacher($schedule, $teacher) {
+        return $this->entityManager->getRepository($this->entityName)->findBy([
+                "schedule" => $schedule,
+                "teacher" => $teacher
             ]
         );
     }

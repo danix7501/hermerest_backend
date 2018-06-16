@@ -47,7 +47,7 @@ class TeachersController extends Controller
      * @Route("/{id}/schedules", name="listarHorariosDeTutoriaProfesor")
      * @Method("GET")
      */
-    public function createAction(Request $request, $id)
+    public function getAction(Request $request, $id)
     {
         $teacher = $this->teacherFacade->find($id);
         $schedules = [];
