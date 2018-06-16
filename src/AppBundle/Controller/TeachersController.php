@@ -126,7 +126,7 @@ class TeachersController extends Controller
     {
         $user = $this->userFacade->find($id);
         if ($user == null) return $this->responseFactory->unsuccessfulJsonResponse('El usuario no existe');
-        if($user->getPasswod() == hash('sha256', $request->request->get('oldPassword'))){
+        if($user->getPassword() == hash('sha256', $request->request->get('oldPassword'))){
             if($request->request->get('newPassword') == $request->request->get('confirmNewPassword')){
                 $user->setPassword(hash('sha256', $request->request->get('newPassword')));
                 $this->userFacade->edit();
