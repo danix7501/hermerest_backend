@@ -82,10 +82,13 @@ class TeachersController extends Controller
         $teacher = $this->teacherFacade->find($id);
         if ($teacher == null) return $this->responseFactory->unsuccessfulJsonResponse('El profesor no existe');
 
+        $course = $teacher->getCourse();
+        if ($course == null) return $this->responseFactory->unsuccessfulJsonResponse('El curso no existe');
+
         return $this->responseFactory->successfulJsonResponse(
             [ 'students' =>
                 $this->utils->serializeArray(
-                    $teacher->getStudents(), new StudentNormalizer()
+                    $course->getStudents(), new StudentNormalizer()
                 )
             ]
         );

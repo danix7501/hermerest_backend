@@ -72,15 +72,6 @@ class Student
      */
     private $schedules;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Teacher", inversedBy="students")
-     *  @ORM\JoinColumn(nullable=false)
-     */
-    private $teacher;
-
-
-
-
 
     public function __construct($name = null, $surname = null, Course $course = null, Centre $centre = null)
     {
@@ -349,29 +340,5 @@ class Student
     public function getSchedules()
     {
         return $this->schedules;
-    }
-
-    /**
-     * Set teacher
-     *
-     * @param Teacher $teacher
-     *
-     * @return Student
-     */
-    public function setTeacher(Teacher $teacher)
-    {
-        $this->teacher = $teacher;
-
-        return $this;
-    }
-
-    /**
-     * Get teacher
-     *
-     * @return Teacher
-     */
-    public function getTeacher()
-    {
-        return $this->teacher;
     }
 }

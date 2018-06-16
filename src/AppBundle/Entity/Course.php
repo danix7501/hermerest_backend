@@ -41,11 +41,10 @@ class Course
     private $students;
 
     /**
-     * @ORM\OneToOne(targetEntity="Teacher")
+     * @ORM\OneToOne(targetEntity="Teacher", inversedBy="course")
      * @ORM\JoinColumn(name="teacher", referencedColumnName="id", nullable=false, onDelete="cascade")
      */
     private $teacher;
-
 
 
     public function __construct($name = null, Centre $centre = null, Teacher $teacher = null)

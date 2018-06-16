@@ -47,19 +47,17 @@ class Teacher
     private $schedules;
 
     /**
-     * @ORM\OneToMany(targetEntity="Student", mappedBy="teacher")
+     * @ORM\OneToOne(targetEntity="Course", mappedBy="teacher")
      */
-    private $students;
+    private $course;
 
 
-
-
-    public function __construct($name = null)
+    public function __construct($name = null, Course $course = null)
     {
         $this->parents = new ArrayCollection();
         $this->schedules = new ArrayCollection();
-        $this->students = new ArrayCollection();
         $this->name = $name;
+        $this->course = $course;
     }
 
     /**
@@ -120,6 +118,31 @@ class Teacher
         return $this->centre;
     }
 
+
+    /**
+     * Set course
+     *
+     * @param Course $course
+     *
+     * @return Teacher
+     */
+    public function setCourse($course)
+    {
+        $this->course = $course;
+
+        return $this;
+    }
+
+    /**
+     * Get course
+     *
+     * @return Course
+     */
+    public function getCourse()
+    {
+        return $this->course;
+    }
+
     /**
      * Set name
      *
@@ -152,15 +175,5 @@ class Teacher
     public function getSchedules()
     {
         return $this->schedules;
-    }
-
-    /**
-     * Get students
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getStudents()
-    {
-        return $this->students;
     }
 }
