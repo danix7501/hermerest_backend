@@ -158,4 +158,19 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * @Route("/changePassword/{id}", name="changePassword")
+     * @Method("PUT")
+     */
+    public function changePasswordAction(Request $request, $id)
+    {
+        $user = $this->userFacade->find($id);
+        if ($user == null) return $this->responseFactory->unsuccessfulJsonResponse('El usuario no existe');
+
+        $user->setPassword(hash('sha256', $request->request->get('newPassword')));
+        $this->userFacade->edit();
+        return $this->responseFactory->successfulJsonResponse('La contraseña ha sido cambiada correctamente');
+    }
+
+
 }

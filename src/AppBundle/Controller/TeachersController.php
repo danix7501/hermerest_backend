@@ -108,7 +108,8 @@ class TeachersController extends Controller
                 [
                     'id' => $teacher->getId(),
                     'name' => $teacher->getName(),
-                    'username' => $teacher->getUser()->getUsername()
+                    'username' => $teacher->getUser()->getUsername(),
+                    'sub' => $teacher->getUser()->getId()
                 ]
             ]);
     }
