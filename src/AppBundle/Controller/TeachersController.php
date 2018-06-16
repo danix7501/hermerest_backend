@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Schedule;
 use AppBundle\Normalizers\ScheduleNormalizer;
+use AppBundle\Normalizers\StudentNormalizer;
 use AppBundle\Services\Facades\ScheduleFacade;
 use AppBundle\Services\Facades\TeacherFacade;
 use AppBundle\Services\ResponseFactory;
@@ -43,16 +44,15 @@ class TeachersController extends Controller
     }
 
     /**
- * @Route("/{id}/schedules", name="listarHorariosDeTutoriaProfesor")
- * @Method("GET")
- */
+     * @Route("/{id}/schedules", name="listarHorariosDeTutoriaProfesor")
+     * @Method("GET")
+     */
     public function createAction(Request $request, $id)
     {
         $teacher = $this->teacherFacade->find($id);
         $schedules = [];
 
         if ($request->query->get('schedule')) {
-            echo 'entre schedule';
             foreach ($teacher->getSchedules() as $schedule) {
                 $scheduleAux = $schedule->getSchedule()->format('Y-m-d');
                 if ($scheduleAux == $request->query->get('schedule')){
@@ -72,4 +72,23 @@ class TeachersController extends Controller
                 ]);
         }
     }
+
+    /**
+     * @Route("/{id}/students", name="listarAlumnosDelProfesor")
+     * @Method("GET")
+     */
+    public function getStudentsAction(Request $request, $id)
+    {
+        $teacher = $this->teacherFacade->find($id);
+        if ($teacher == null) return $this->responseFactory->unsuccessfulJsonResponse('El profesor no existe');
+
+        return $this->responseFactory->successfulJsonResponse(
+            [ 'students' =>
+                $this->utils->serializeArray(
+                    $teacher->getStudents(), new StudentNormalizer()
+                )
+            ]
+        );
+    }
+
 }
