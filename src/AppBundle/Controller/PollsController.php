@@ -138,8 +138,8 @@ class PollsController extends Controller
             'sendingDate' => $poll->getSendingDate()->format('Y-m-d H:i:s'),
             'limitDate' => $poll->getLimitDate()->format('Y-m-d H:i:s'),
             'options' => $this->utils->serializeArray($poll->getPollOptions(), new PollOptionNormalizer()),
-            'attachmentId' => $poll->getAttachments()[0]->getId(),
-            'attachmentName' => $poll->getAttachments()[0]->getName(),
+            'attachmentId' =>  $poll->getAttachments()[0] == null ? null : $poll->getAttachments()[0]->getId(),
+            'attachmentName' => $poll->getAttachments()[0] == null ? null : $poll->getAttachments()[0]->getName(),
             'multiple' => $poll->getMultipleChoice(),
             'replied' => $poll->isRepliedBy($parent)
         ]);
