@@ -114,4 +114,25 @@ class TeachersController extends Controller
             ]);
     }
 
+    /**
+     * @Route("{id}/changePassword", name="changePassword")
+     * @Method("PUT")
+     */
+    public function changePasswordAction(Request $request, $id)
+    {
+        $user = $this->userFacade->find($id);
+        if ($user == null) return $this->responseFactory->unsuccessfulJsonResponse('El usuario no existe');
+        if($user->getPasswod() == hash('sha256', $request->request->get('oldPassword'))){
+            if($request->request->get('newPassword') == $request->request->get('confirmNewPassword')){
+                $user->setPassword(hash('sha256', $request->request->get('newPassword')));
+                $this->userFacade->edit();
+                return $this->responseFactory->successfulJsonResponse('La contraseña ha sido cambiada correctamente.');
+            }else{
+                return $this->responseFactory->unsuccessfulJsonResponse('La contraseña nueva y la confirmacion deben coincidir.');
+            }
+        }else{
+            return $this->responseFactory->unsuccessfulJsonResponse('La contraseña antigua no es la correcta.');
+        }
+    }
+
 }
