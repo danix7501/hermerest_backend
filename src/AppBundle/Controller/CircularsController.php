@@ -106,8 +106,8 @@ class CircularsController extends Controller
             'subject' => $circular->getSubject(),
             'message' => $circular->getMessage(),
             'sendingDate' => $circular->getSendingDate()->format('Y-m-d G:i:s'),
-            'attachmentId' => $circular->getAttachments()[0]->getId(),
-            'attachmentName' => $circular->getAttachments()[0]->getName()
+            'attachmentId' => $circular->getAttachments()[0] == null ? null : $circular->getAttachments()[0]->getId(),
+            'attachmentName' => $circular->getAttachments()[0] == null ? null : $circular->getAttachments()[0]->getName()
         ]);
     }
 
