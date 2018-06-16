@@ -139,4 +139,19 @@ class TeachersController extends Controller
         }
     }
 
+    /**
+     * @Route("/{id}/changeName", name="editarNombreProfesor")
+     * @Method("PUT")
+     */
+    public function editNameAction(Request $request, $id)
+    {
+        $teacher = $this->teacherFacade->find($id);
+        if ($teacher == null) return $this->responseFactory->unsuccessfulJsonResponse('El profesor no existe');
+
+        $teacher->setName($request->request->get('newName'));
+        $this->teacherFacade->edit();
+
+        return $this->responseFactory->successfulJsonResponse('El profesor ha sido editado correctamente');
+    }
+
 }
