@@ -30,7 +30,7 @@ class Teacher
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Centre")
+     * @ORM\ManyToOne(targetEntity="Centre", inversedBy="teachers")
      * @ORM\JoinColumn(name="centre", referencedColumnName="id", nullable=false, onDelete="cascade")
      */
     private $centre;

@@ -61,10 +61,10 @@ class ScheduleController extends Controller
         $timeFrom = new DateTime($request->request->get('timeFrom'), new DateTimeZone('Atlantic/Canary'));
         $timeTo = new DateTime($request->request->get('timeTo'), new DateTimeZone('Atlantic/Canary'));
         $daysOfWek = $request->request->get('daysOfWek');
-        $status = $request->request->get('status');
         $segment = $request->request->get('segment');
         $teacher = $this->teacherFacade->find($request->request->get('teacher'));
         while ($dateFrom <= $dateTo) {
+            $daysOfWek = explode(',', $daysOfWek);
             foreach ($daysOfWek as $dayOfWek){
                 if ($dateFrom->format('w') == $dayOfWek){
                     $timeFromAux = clone  $timeFrom;
@@ -78,7 +78,6 @@ class ScheduleController extends Controller
                             $schedule->setTimeFrom($timeFromAux);
                             $schedule->setTimeTo($timeToAux);
                             $schedule->setTeacher($teacher);
-                            $schedule->setStatus($status);
                             $this->scheduleFacade->create($schedule);
                         }
                         $timeFromAux->add(new DateInterval('PT' .$segment . 'M'));

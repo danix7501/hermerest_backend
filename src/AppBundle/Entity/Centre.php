@@ -55,11 +55,17 @@ class Centre
      */
     private $messages;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Teacher", mappedBy="centre")
+     */
+    private $teachers;
+
     public function __construct($name = null)
     {
         $this->courses = new ArrayCollection();
         $this->students = new ArrayCollection();
         $this->parents = new ArrayCollection();
+        $this->teachers = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->name = $name;
     }
@@ -258,5 +264,15 @@ class Centre
     public function getParents()
     {
         return $this->parents;
+    }
+
+    /**
+     * Get teachers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTeachers()
+    {
+        return $this->teachers;
     }
 }

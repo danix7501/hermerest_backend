@@ -82,13 +82,22 @@ class CoursesController
     public function createAction(Request $request)
     {
         $centre = $this->centreFacade->find($request->request->get('centre'));
+        $teacher = $this->teacherFacade->find($request->request->get('teacher'));
 
-        $course = new Course();
-        $course->setName($request->request->get('name'));
-        $course->setCentre($centre);
+        if ($teacher == null) return $this->responseFactory->unsuccessfulJsonResponse('El profesor no existe');
 
-        $this->courseFacade->create($course);
-        return $this->responseFactory->successfulJsonResponse((new CourseNormalizer())->normalize($course));
+        if ($teacher->getCourse() == null) {
+            $course = new Course();
+            $course->setName($request->request->get('name'));
+            $course->setTeacher($teacher);
+            $course->setCentre($centre);
+
+            $this->courseFacade->create($course);
+            return $this->responseFactory->successfulJsonResponse((new CourseNormalizer())->normalize($course));
+
+        } else {
+            return $this->responseFactory->unsuccessfulJsonResponse('Este profesor ya esta asociado a un curso');
+        }
     }
 
 

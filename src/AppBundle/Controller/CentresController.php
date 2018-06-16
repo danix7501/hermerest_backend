@@ -15,6 +15,7 @@ use AppBundle\Normalizers\CourseNormalizer;
 use AppBundle\Normalizers\PollNormalizer;
 use AppBundle\Normalizers\ProgenitorNormalizer;
 use AppBundle\Normalizers\StudentNormalizer;
+use AppBundle\Normalizers\TeacherNormalizer;
 use AppBundle\Services\Facades\CentreFacade;
 use AppBundle\Services\Facades\ProgenitorFacade;
 use AppBundle\Services\ResponseFactory;
@@ -99,6 +100,24 @@ class CentresController extends Controller
             ['parents' =>
                 $this->utils->serializeArray(
                     $centro->getParents(), new ProgenitorNormalizer()
+                )
+            ]
+        );
+    }
+
+    /**
+     * @Route("/{id}/teachers", name="listarProfesoresDelCentro")
+     * @Method("GET")
+     */
+    public function getTeachersAction(Request $request, $id)
+    {
+        $centro= $this->centreFacade->find($id);
+        if ($centro == null) return $this->responseFactory->unsuccessfulJsonResponse("El centro no existe");
+
+        return $this->responseFactory->successfulJsonResponse(
+            ['teachers' =>
+                $this->utils->serializeArray(
+                    $centro->getTeachers(), new TeacherNormalizer()
                 )
             ]
         );
