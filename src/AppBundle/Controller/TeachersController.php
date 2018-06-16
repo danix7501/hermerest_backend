@@ -115,7 +115,7 @@ class TeachersController extends Controller
     }
 
     /**
-     * @Route("{id}/changePassword", name="changePassword")
+     * @Route("/{id}/changePassword", name="cambiarContraseñaProfesor")
      * @Method("PUT")
      */
     public function changePasswordAction(Request $request, $id)
