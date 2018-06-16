@@ -78,6 +78,7 @@ class ScheduleController extends Controller
                             $schedule->setTimeFrom($timeFromAux);
                             $schedule->setTimeTo($timeToAux);
                             $schedule->setTeacher($teacher);
+                            $schedule->setStatus(0);
                             $this->scheduleFacade->create($schedule);
                         }
                         $timeFromAux->add(new DateInterval('PT' .$segment . 'M'));
