@@ -13,6 +13,7 @@ use AppBundle\Normalizers\ScheduleNormalizer;
 use AppBundle\Normalizers\StudentNormalizer;
 use AppBundle\Services\Facades\ScheduleFacade;
 use AppBundle\Services\Facades\TeacherFacade;
+use AppBundle\Services\Facades\UserFacade;
 use AppBundle\Services\ResponseFactory;
 use AppBundle\Services\Utils;
 use DateTime;
@@ -28,18 +29,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class TeachersController extends Controller
 {
     private $scheduleFacade;
+    private $userFacade;
     private $teacherFacade;
     private $responseFactory;
     private $utils;
 
     public function __construct(ScheduleFacade $scheduleFacade,
                                 TeacherFacade $teacherFacade,
+                                UserFacade $userFacade,
                                 ResponseFactory $responseFactory,
                                 Utils $utils)
     {
         $this->scheduleFacade = $scheduleFacade;
         $this->teacherFacade = $teacherFacade;
         $this->responseFactory = $responseFactory;
+        $this->userFacade = $userFacade;
         $this->utils = $utils;
     }
 
