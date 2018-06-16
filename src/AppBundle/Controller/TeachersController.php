@@ -94,4 +94,23 @@ class TeachersController extends Controller
         );
     }
 
+    /**
+     * @Route("/{id}", name="verProfesor")
+     * @Method("GET")
+     */
+    public function getTeacherAction(Request $request, $id)
+    {
+        $teacher = $this->teacherFacade->find($id);
+        if ($teacher == null) return $this->responseFactory->unsuccessfulJsonResponse('El profesor no existe');
+
+        return $this->responseFactory->successfulJsonResponse(
+            [ 'teacher' =>
+                [
+                    'id' => $teacher->getId(),
+                    'name' => $teacher->getName(),
+                    'username' => $teacher->getUser()->getUsername()
+                ]
+            ]);
+    }
+
 }

@@ -7,6 +7,7 @@ use AppBundle\Entity\Administrator;
 use AppBundle\Entity\Progenitor;
 use AppBundle\Entity\Teacher;
 use AppBundle\Entity\User;
+use AppBundle\Normalizers\CourseNormalizer;
 use AppBundle\Services\Facades\AdministratorFacade;
 use AppBundle\Services\Facades\CentreFacade;
 use AppBundle\Services\Facades\ProgenitorFacade;
@@ -14,6 +15,7 @@ use AppBundle\Services\Facades\TeacherFacade;
 use AppBundle\Services\Facades\UserFacade;
 use AppBundle\Services\JwtAuth;
 use AppBundle\Services\ResponseFactory;
+use AppBundle\Services\Utils;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -29,9 +31,11 @@ class UserController extends Controller
     private $administratorFacade;
     private $centreFacade;
     private $responseFactory;
+    private $utils;
 
     public function __construct(JwtAuth $jwtAuth,
                                 ResponseFactory $responseFactory,
+                                Utils $utils,
                                 UserFacade $userFacade,
                                 ProgenitorFacade $progenitorFacade,
                                 TeacherFacade $teacherFacade,
@@ -40,11 +44,13 @@ class UserController extends Controller
     {
         $this->jwtAuth = $jwtAuth;
         $this->responseFactory = $responseFactory;
+        $this->utils = $utils;
         $this->userFacade = $userFacade;
         $this->progenitorFacade = $progenitorFacade;
         $this->teacherFacade = $teacherFacade;
         $this->centreFacade = $centreFacade;
         $this->administratorFacade = $administratorFacade;
+
     }
 
     /**
@@ -129,7 +135,14 @@ class UserController extends Controller
                         $teacher->setCentre($centre);
                         $teacher->setUser($findUser);
                         $this->teacherFacade->create($teacher);
-                        return $this->responseFactory->successfulJsonResponse('Profesor creado correctamente');
+                        return $this->responseFactory->successfulJsonResponse(
+                            ['teacher' =>
+                                [
+                                    'id' => $teacher->getId(),
+                                    'name' => $teacher->getName(),
+                                    'course' => null
+                                ]
+                        ]);
                     case 'administrator':
                         $teacher = new Administrator();
                         $teacher->setName($request->request->get('name'));
@@ -142,7 +155,6 @@ class UserController extends Controller
             } else {
                 return $this->responseFactory->unsuccessfulJsonResponse('No se puede registrar porque el nombre de usuario ya esta dado de alta en el sistema');
             }
-
         }
     }
 
