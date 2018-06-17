@@ -22,7 +22,8 @@ class ScheduleNormalizer implements NormalizerInterface
             'timeFrom' => $object->getTimeFrom(),
             'timeTo' => $object->getTimeTo(),
             'status' => $object->getStatus(),
-            'student' => $object->getStudent() == null ? null : (new StudentNormalizer())->normalize($object->getStudent())
+            'student' => $object->getStudent() == null ? null : (new StudentNormalizer())->normalize($object->getStudent()),
+            'teacher' => $object->getTeacher() == null ? null : (new TeacherNormalizer())->normalize($object->getTeacher())
         ];
     }
     public function supportsNormalization($data, $format = null)
