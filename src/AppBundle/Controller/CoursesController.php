@@ -100,6 +100,26 @@ class CoursesController
         }
     }
 
+    /**
+     * @Route("/{id}", name="cambiarAlumnosDeCurso")
+     * @Method("PUT")
+     */
+    public function updateCourseOfStudentAction(Request $request, $id)
+    {
+        $course = $this->courseFacade->find($id);
+        $studentsIds = $request->request->get('studentsIds');
+        if ($course == null) return  $this->responseFactory->unsuccessfulJsonResponse('El curso no existe');
+
+        $studentsIds = explode(',', $studentsIds);
+        foreach ($studentsIds as $studentId) {
+            $student = $this->studentFacade->find($studentId);
+            if ($student == null) return $this->responseFactory->unsuccessfulJsonResponse('No existe el estudiante');
+            $student->setCourse($course);
+            $this->studentFacade->edit();
+        }
+        return $this->responseFactory->successfulJsonResponse('Alumnos cambiados de curso correctamente');
+    }
+
 
     /**
      * @Route("/{id}", name="eliminarCurso")
