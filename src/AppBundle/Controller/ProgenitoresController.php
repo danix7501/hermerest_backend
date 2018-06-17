@@ -23,6 +23,7 @@ use AppBundle\Services\Utils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use  AppBundle\Normalizers\ScheduleNormalizer;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -212,6 +213,22 @@ class ProgenitoresController extends Controller
             'smsCode' => '123456',
             'found' => true,
         ]);
+    }
+
+    /**
+     * @Route("/{id}/schedules", name="listarCitasPadre")
+     * @Method("GET")
+     */
+    public function getSchedulesAction(Request $request, $id)
+    {
+        $parent = $this->progenitorFacade->find($id);
+        if ($parent == null) return $this->responseFactory->unsuccessfulJsonResponse("El padre no existe");
+        $schedules = [];
+        foreach ($parent->getChildren() as $child) {
+            array_push($schedules, $this->utils->serializeArray($child->getSchedules(), new ScheduleNormalizer()));
+        }
+        return $this->responseFactory->successfulJsonResponse(
+            ['schedules' => $schedules]);
     }
 
     /**
