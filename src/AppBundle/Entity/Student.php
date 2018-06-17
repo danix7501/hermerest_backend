@@ -299,7 +299,7 @@ class Student
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getAuthorizationRepliesById($autorizationId)
+    public function getAuthorizationReplyById($autorizationId)
     {
         return $this->authorizationReplies->find($autorizationId);
     }
