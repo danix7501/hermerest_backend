@@ -301,9 +301,10 @@ class Student
      */
     public function getAuthorizationReplyById($autorizationCheck)
     {
-        foreach ($this->authorizationReplies as $authorization){
-            if($authorization->getId() == $autorizationCheck->getId()){
-                return $authorization;
+        foreach ($this->authorizationReplies as $authorizationReplie){
+            foreach ($autorizationCheck->getReplies() as $authorizationReplieCheck)
+            if($authorizationReplie->getId() == $authorizationReplieCheck->getId()){
+                return $authorizationReplie;
             }
         }
         return null;
