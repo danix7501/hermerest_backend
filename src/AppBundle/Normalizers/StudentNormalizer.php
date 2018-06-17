@@ -20,6 +20,7 @@ class StudentNormalizer implements NormalizerInterface
             'id' => $object->getId(),
             'name' => $object->getName(),
             'surname' => $object->getSurname(),
+            'status' => $object->getStatus(),
             'course' => (new CourseNormalizer())->normalize($object->getCourse()),
         ];
     }
