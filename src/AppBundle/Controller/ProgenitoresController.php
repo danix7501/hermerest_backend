@@ -13,6 +13,7 @@ use AppBundle\Normalizers\CentreNormalizer;
 use AppBundle\Normalizers\CircularNormalizer;
 use AppBundle\Normalizers\PollNormalizer;
 use AppBundle\Normalizers\StudentNormalizer;
+use AppBundle\Normalizers\TeacherNormalizer;
 use AppBundle\Services\Facades\AttachmentFacade;
 use AppBundle\Services\Facades\AuthorizationFacade;
 use AppBundle\Services\Facades\CentreFacade;
@@ -135,6 +136,27 @@ class ProgenitoresController extends Controller
                     $parent->getChildren(), new StudentNormalizer()
                 )
             ]
+        );
+    }
+    /**
+     * @Route("/{id}/teachers", name="listarProfesoresDelHijo")
+     * @Method("GET")
+     */
+    public function getTeachersAction(Request $request, $id)
+    {
+        $parent = $this->progenitorFacade->find($id);
+        if ($parent == null) return $this->responseFactory->unsuccessfulJsonResponse("El padre no existe");
+        $teachers =[];
+        foreach ($parent->getChildren() as $child){
+            $course = $child->getCourse();
+            if($course != null){
+                $teacher = [ 'id' => $course->getTeacher()->getId(), 'name' =>  $course->getTeacher()->getName(),
+                    'student' => ['id' => $child->getId(), 'name' => $child->getName()]];
+                array_push($teachers, $teacher);
+            }
+        }
+        return $this->responseFactory->successfulJsonResponse(
+            ['teachers' => $teachers]
         );
     }
 
