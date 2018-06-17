@@ -299,10 +299,10 @@ class Student
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getAuthorizationReplyById($autorizationId)
+    public function getAuthorizationReplyById($autorizationCheck)
     {
         foreach ($this->authorizationReplies as $authorization){
-            if($authorization->getId() == $autorizationId){
+            if($authorization->getId() == $autorizationCheck->getId()){
                 return $authorization;
             }
         }
