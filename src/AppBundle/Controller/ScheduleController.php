@@ -122,6 +122,8 @@ class ScheduleController extends Controller
                 $this->scheduleFacade->edit();
 
                 switch ($request->request->get('status')) {
+                    case 1: return $this->responseFactory->successfulJsonResponse('Petición de tutoría restablecida');
+                        break;
                     case 2: return $this->responseFactory->successfulJsonResponse('Horario de tutoría confirmado');
                         break;
                     case 3: return $this->responseFactory->successfulJsonResponse('Horario de tutoría cancelado');
