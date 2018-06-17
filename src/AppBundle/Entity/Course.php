@@ -22,7 +22,6 @@ class Course
      */
     private $id;
 
-
     /**
      * @ORM\Column(type="string", length=50, name="name", nullable=false)
      */
@@ -42,7 +41,7 @@ class Course
 
     /**
      * @ORM\OneToOne(targetEntity="Teacher", inversedBy="course")
-     * @ORM\JoinColumn(name="teacher", referencedColumnName="id", nullable=false, onDelete="cascade")
+     * @ORM\JoinColumn(name="teacher", referencedColumnName="id", onDelete="cascade")
      */
     private $teacher;
 

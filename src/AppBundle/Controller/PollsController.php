@@ -121,7 +121,27 @@ class PollsController extends Controller
                 'subject' => $poll->getSubject(),
             ]
         ]);
+    }
 
+    /**
+     * @Route("/{id}/editLimitDate", name="editarFechaLimiteEncuesta")
+     * @Method("PUT")
+     */
+    public function editLimitDatePollAction(Request $request, $id)
+    {
+        $poll = $this->pollFacade->find($id);
+        if ($poll == null) return $this->responseFactory->unsuccessfulJsonResponse('La encuesta no existe');
+
+        $poll->setLimitDate(new DateTime($request->request->get('newLimitDate') . '23:59:59', new DateTimeZone('Atlantic/Canary')));
+        $this->pollFacade->edit();
+
+        return $this->responseFactory->successfulJsonResponse(
+            [ 'poll' =>
+                [
+                    'id' => $poll->getId(),
+                    'limitDate' => $poll->getLimitDate()
+                ]
+            ]);
     }
 
     /**

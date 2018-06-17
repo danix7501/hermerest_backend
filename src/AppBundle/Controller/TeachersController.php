@@ -119,6 +119,26 @@ class TeachersController extends Controller
     }
 
     /**
+     * @Route("/{id}", name="eliminarProfesor")
+     * @Method("DELETE")
+     */
+    public function deleteTeacherAction(Request $request, $id)
+    {
+        $teacher = $this->teacherFacade->find($id);
+        if ($teacher == null) return $this->responseFactory->unsuccessfulJsonResponse('El profesor no existe');
+
+        $user = $this->userFacade->find($teacher->getUser()->getId());
+        if ($teacher->getCourse() == null) {
+            $this->teacherFacade->remove($teacher);
+            $this->userFacade->remove($user);
+            return $this->responseFactory->successfulJsonResponse('Profesor eliminado correctamente');
+
+        } else {
+            return $this->responseFactory->unsuccessfulJsonResponse('Este profesor esta asociado a un curso');
+        }
+    }
+
+    /**
      * @Route("/{id}/changePassword", name="cambiarContraseñaProfesor")
      * @Method("PUT")
      */

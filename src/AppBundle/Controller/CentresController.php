@@ -129,13 +129,13 @@ class CentresController extends Controller
      */
     public function getStudentsAction(Request $request, $id)
     {
-        $centro= $this->centreFacade->find($id);
-        if ($centro == null) return $this->responseFactory->unsuccessfulJsonResponse("El centro no existe");
+        $centre = $this->centreFacade->find($id);
+        if ($centre == null) return $this->responseFactory->unsuccessfulJsonResponse("El centro no existe");
 
         return $this->responseFactory->successfulJsonResponse(
             ['students' =>
                 $this->utils->serializeArray(
-                    $centro->getStudents(), new StudentNormalizer()
+                    $centre->getStudents(), new StudentNormalizer()
                 )
             ]
         );

@@ -121,6 +121,27 @@ class AuthorizationsController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/{id}/editLimitDate", name="editarFechaLimiteAutorizacion")
+     * @Method("PUT")
+     */
+    public function editLimitDateAuthorizationAction(Request $request, $id)
+    {
+        $authorization = $this->authorizationFacade->find($id);
+        if ($authorization == null) return $this->responseFactory->unsuccessfulJsonResponse('La autorización no existe');
+
+        $authorization->setLimitDate(new DateTime($request->request->get('newLimitDate') . '23:59:59', new DateTimeZone('Atlantic/Canary')));
+        $this->authorizationFacade->edit();
+
+        return $this->responseFactory->successfulJsonResponse(
+            [ 'authorization' =>
+                [
+                    'id' => $authorization->getId(),
+                    'limitDate' => $authorization->getLimitDate()
+                ]
+        ]);
+    }
+
 
     private function sendAuthorization($studentsIds, $authorization, $authorizationFacade)
     {
