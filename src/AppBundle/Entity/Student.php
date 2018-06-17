@@ -34,12 +34,6 @@ class Student
      */
     private $surname;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="status", type="integer")
-     */
-    private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity="Course", inversedBy="students")
@@ -80,7 +74,7 @@ class Student
     private $schedules;
 
 
-    public function __construct($name = null, $surname = null, Course $course = null, Centre $centre = null, $status = null)
+    public function __construct($name = null, $surname = null, Course $course = null, Centre $centre = null)
     {
         $this->parents = new ArrayCollection();
         $this->messages = new ArrayCollection();
@@ -90,7 +84,6 @@ class Student
         $this->surname = $surname;
         $this->course = $course;
         $this->centre = $centre;
-        $this->status = $status;
     }
 
     /**
@@ -149,30 +142,6 @@ class Student
     public function getSurname()
     {
         return $this->surname;
-    }
-
-    /**
-     * Set status
-     *
-     * @param integer $status
-     *
-     * @return integer
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get status
-     *
-     * @return integer
-     */
-    public function getStatus()
-    {
-        return $this->status;
     }
 
     /**
