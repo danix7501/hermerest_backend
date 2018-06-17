@@ -285,13 +285,23 @@ class Student
     }
 
     /**
-     * Get authorizationReplies
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
+ * Get authorizationReplies
+ *
+ * @return \Doctrine\Common\Collections\Collection
+ */
     public function getAuthorizationReplies()
     {
         return $this->authorizationReplies;
+    }
+
+    /**
+     * Get authorizationRepliesbyId
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAuthorizationRepliesById($autorizationId)
+    {
+        return $this->authorizationReplies->find($autorizationId);
     }
 
     /**

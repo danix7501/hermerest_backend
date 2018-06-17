@@ -270,16 +270,16 @@ class ProgenitoresController extends Controller
             'limitDate' => $authorization->getLimitDate()->format('Y-m-d H:i:s'),
             'attachmentId' => $authorization->getAttachments()[0] == null ? null : $authorization->getAttachments()[0]->getId(),
             'attachmentName' => $authorization->getAttachments()[0] == null ? null : $authorization->getAttachments()[0]->getName(),
-            'reply' => $this->getReply($parent, $student, $authorization),
-            'replyId' => is_null($parent->getAuthorizationReply($student, $authorization)) ? null : ($parent->getAuthorizationReply($student, $authorization)->getId()),
+            'reply' => $this->getReply($student, $authorization),
+            'replyId' => is_null($student->getAuthorizationReplyById($authorization)) ? null : ($student->getAuthorizationReplyById($authorization)->getId()),
             'studentName' => $student->getName() . ' ' . $student->getSurname(),
             'authorized' => $student->isAuthorizedTo($authorization)
         ]);
     }
 
-    public function getReply($parent, $student, $authorization)
+    public function getReply($student, $authorization)
     {
-        $reply = $parent->getAuthorizationReply($student, $authorization);
+        $reply = $student->getAuthorizationReplyById($authorization);
         return is_null($reply) ? null :
             ($reply->getAuthorized() ? true : false);
     }
