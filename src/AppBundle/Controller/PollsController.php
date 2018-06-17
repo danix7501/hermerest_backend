@@ -119,6 +119,7 @@ class PollsController extends Controller
                 'sendingDate' => $poll->getSendingDate(),
                 'limitDate' => $poll->getLimitDate(),
                 'subject' => $poll->getSubject(),
+                'message' => $poll->getMessage()
             ]
         ]);
     }

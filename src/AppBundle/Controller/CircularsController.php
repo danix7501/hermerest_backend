@@ -90,6 +90,8 @@ class CircularsController extends Controller
             'id' => $circular->getId(),
             'subject' => $circular->getSubject(),
             'sendingDate' => $circular->getSendingDate(),
+             'message' => $circular->getMessage()
+
             ]
         ]);
     }

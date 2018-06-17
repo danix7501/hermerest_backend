@@ -116,7 +116,9 @@ class AuthorizationsController extends Controller
                 'id' => $authorization->getId(),
                 'sendingDate' => $authorization->getSendingDate(),
                 'limitDate' => $authorization->getLimitDate(),
-                'subject' => $authorization->getSubject()
+                'subject' => $authorization->getSubject(),
+                'message' => $authorization->getMessage()
+,
             ]
         ]);
     }
