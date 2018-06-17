@@ -206,7 +206,8 @@ class ProgenitoresController extends Controller
                     'attachment' => count($message['message']->getAttachments()) > 0 ? true : false,
                     'limitDate' => $message['message']->getlimitDate()->format('Y-m-d H:i:s'),
                     'studentId' => $message['child']->getId(),
-                    'studentName' => $message['child']->getName()
+                    'studentName' => $message['child']->getName(),
+                    'centre' => $message['message']->getCentre()->getName()
                 ] :
                 [
                     'id' => $message->getId(),
@@ -214,6 +215,7 @@ class ProgenitoresController extends Controller
                     'sendingDate' => $message->getSendingDate()->format('Y-m-d H:i:s'),
                     'attachment' => count($message->getAttachments()) > 0 ? true : false,
                     'limitDate' => ($type == 'Poll') ? $message->getlimitDate()->format('Y-m-d H:i:s') : null,
+                    'centre' =>  $message->getCentre()->getName()
                 ]);
         }
         return $messagesArray;
