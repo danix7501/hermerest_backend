@@ -39,6 +39,7 @@ class JwtAuth
         return JWT::encode([
             "sub" => $user->getId(),
             "id" => $associatedUser->getId(),
+            "name" => $associatedUser->getName(),
             "username" => $user->getUsername(),
             "rol" => $user->getRol(),
             "iat" => time(),
