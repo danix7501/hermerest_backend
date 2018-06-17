@@ -65,7 +65,7 @@ class AuthorizationsRepliesController extends Controller
         $authorizationReply->setAuthorized($request->request->get('authorized'));
         $this->authorizationReplyFacade->create($authorizationReply);
 
-        return $this->responseFactory->successfulJsonResponse([]);
+        return $this->responseFactory->successfulJsonResponse(['replyId' =>$authorizationReply->getId()]);
     }
     /**
      * @Route("/{id}", name="editarRespuestaAutorizacion")
