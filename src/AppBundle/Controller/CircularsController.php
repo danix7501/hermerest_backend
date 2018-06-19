@@ -10,10 +10,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Attachment;
 use AppBundle\Entity\Circular;
+use AppBundle\Entity\Progenitor;
 use AppBundle\Normalizers\CircularNormalizer;
 use AppBundle\Services\Facades\AttachmentFacade;
 use AppBundle\Services\Facades\CentreFacade;
 use AppBundle\Services\Facades\CircularFacade;
+use AppBundle\Services\Facades\ProgenitorFacade;
 use AppBundle\Services\Facades\StudentFacade;
 use AppBundle\Services\ResponseFactory;
 use AppBundle\Services\Utils;
@@ -30,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 class CircularsController extends Controller
 {
     private $studentFacade;
+    private $parentFacade;
     private $circularFacade;
     private $attachmentFacade;
     private $centreFacade;
@@ -37,6 +40,7 @@ class CircularsController extends Controller
     private $utils;
 
     public function __construct(StudentFacade $studentFacade,
+                                ProgenitorFacade $parentFacade,
                                 CircularFacade $circularFacade,
                                 CentreFacade $centreFacade,
                                 AttachmentFacade $attachmentFacade,
@@ -44,6 +48,7 @@ class CircularsController extends Controller
                                 Utils $utils)
     {
         $this->studentFacade = $studentFacade;
+        $this->parentFacade = $parentFacade;
         $this->circularFacade = $circularFacade;
         $this->centreFacade = $centreFacade;
         $this->attachmentFacade = $attachmentFacade;
@@ -97,19 +102,46 @@ class CircularsController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="verCircular")
+     * @Route("/{idCircular}/parents/{idParent}", name="verCircular")
      * @Method("GET")
      */
-    public function seeAction(Request $request, $id)
+    public function seeAction(Request $request, $idCircular, $idParent)
     {
-        $circular = $this->circularFacade->find($id);
+        $readCircular = 0;
+        $cont = 0;
+        $circular = $this->circularFacade->find($idCircular);
+        if ($circular == null) return $this->responseFactory->unsuccessfulJsonResponse('La circular no existe');
+
+        $parent = $this->parentFacade->find($idParent);
+        if ($parent == null) return $this->responseFactory->unsuccessfulJsonResponse('El padre no existe');
+
+        $parents = $circular->getParents();
+        $messages = $parent->getMessages();
+        
+            foreach ($parents as $p) {
+                foreach ($messages as $m) {
+                    if ($p == $parent && $m == $circular) {
+                        $cont = $cont + 1;
+                    }
+                }
+            }
+            if ($cont == 1) {
+                $readCircular = 1;
+            } else {
+                $circular->addParent($parent);
+                $this->circularFacade->edit();
+                $parent->addMessage($circular);
+                $this->parentFacade->edit();
+            }
+
         return $this->responseFactory->successfulJsonResponse([
             'id' => $circular->getId(),
             'subject' => $circular->getSubject(),
             'message' => $circular->getMessage(),
             'sendingDate' => $circular->getSendingDate()->format('Y-m-d G:i:s'),
             'attachmentId' => $circular->getAttachments()[0] == null ? null : $circular->getAttachments()[0]->getId(),
-            'attachmentName' => $circular->getAttachments()[0] == null ? null : $circular->getAttachments()[0]->getName()
+            'attachmentName' => $circular->getAttachments()[0] == null ? null : $circular->getAttachments()[0]->getName(),
+            'read' => $readCircular
         ]);
     }
 

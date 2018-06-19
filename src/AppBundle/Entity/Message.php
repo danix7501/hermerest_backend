@@ -63,6 +63,15 @@ abstract class Message
     private $students;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Progenitor", inversedBy="messages")
+     * @ORM\JoinTable(name="message_parent",
+     *      joinColumns={@ORM\JoinColumn(name="message", referencedColumnName="id", onDelete="cascade")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="parent", referencedColumnName="id", onDelete="cascade")}
+     *      )
+     */
+    private $parents;
+
+    /**
      * @ORM\OneToMany(targetEntity="Attachment", mappedBy="message")
      * @ORM\OrderBy({"name" = "ASC"})
      */
@@ -71,6 +80,7 @@ abstract class Message
     public function __construct($subject, $message, ?DateTime $sendingDate, ?Centre $centre)
     {
         $this->students = new ArrayCollection();
+        $this->parents = new ArrayCollection();
         $this->attachments = new ArrayCollection();
         $this->subject = $subject;
         $this->message = $message;
@@ -216,6 +226,40 @@ abstract class Message
     public function getStudents()
     {
         return $this->students;
+    }
+
+    /**
+     * Add parent
+     *
+     * @param Progenitor $parent
+     *
+     * @return Message
+     */
+    public function addParent(Progenitor $parent)
+    {
+        $this->parents[] = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Remove parent
+     *
+     * @param Progenitor $parent
+     */
+    public function removeParent(Progenitor $parent)
+    {
+        $this->parents->removeElement($parent);
+    }
+
+    /**
+     * Get parents
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getParents()
+    {
+        return $this->parents;
     }
 
     /**

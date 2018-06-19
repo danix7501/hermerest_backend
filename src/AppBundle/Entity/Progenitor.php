@@ -68,6 +68,12 @@ class Progenitor
      */
     private $teachers;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Message", mappedBy="parents")
+     * @ORM\OrderBy({"sendingDate" = "DESC"})
+     */
+    private $messages;
+
     public function __construct($name = null, $telephone = null)
     {
         $this->children = new ArrayCollection();
@@ -75,6 +81,7 @@ class Progenitor
         $this->centres = new ArrayCollection();
         $this->authorizationReplies = new ArrayCollection();
         $this->pollReplies = new ArrayCollection();
+        $this->messages = new ArrayCollection();
         $this->name = $name;
         $this->telephone = $telephone;
     }
@@ -336,5 +343,39 @@ class Progenitor
                 $childMessage
             );
         }
+    }
+
+    /**
+     * Add message
+     *
+     * @param Message $message
+     *
+     * @return Progenitor
+     */
+    public function addMessage(Message $message)
+    {
+        $this->messages[] = $message;
+
+        return $this;
+    }
+
+    /**
+     * Remove message
+     *
+     * @param Message $message
+     */
+    public function removeMessage(Message $message)
+    {
+        $this->messages->removeElement($message);
+    }
+
+    /**
+     * Get messages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 }
