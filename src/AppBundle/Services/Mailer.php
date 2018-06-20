@@ -16,6 +16,7 @@ class Mailer
 {
     const VERIFY_ACCOUNT = "verify_account";
     const FORGOT_PASSWORD = "forgot_password";
+    const NOTIFY_ACCOUNT_CREATED = "notificacion_cuenta_creada";
 
     private $from;
     private $mailer;
