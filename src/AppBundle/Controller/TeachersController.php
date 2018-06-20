@@ -56,6 +56,22 @@ class TeachersController extends Controller
         $teacher = $this->teacherFacade->find($id);
         $schedules = [];
 
+
+        if ($request->query->get('status')) {
+            if ($request->query->get('status') == 1) {
+                foreach ($teacher->getSchedules() as $schedule) {
+                    if ($schedule->getStatus() == 1) {
+                        array_push($schedules, $schedule);
+                    }
+                }
+            }
+            return $this->responseFactory->successfulJsonResponse(
+                ['schedules' => $this->utils->serializeArray(
+                    $schedules, new ScheduleNormalizer()
+                )
+                ]);
+        }
+
         if ($request->query->get('schedule')) {
             foreach ($teacher->getSchedules() as $schedule) {
                 $scheduleAux = $schedule->getSchedule()->format('Y-m-d');
