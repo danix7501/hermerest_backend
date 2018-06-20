@@ -107,25 +107,15 @@ class CircularsController extends Controller
      */
     public function seeAction(Request $request, $idCircular, $idParent)
     {
-        $readCircular = 0;
-        $cont = 0;
+
         $circular = $this->circularFacade->find($idCircular);
         if ($circular == null) return $this->responseFactory->unsuccessfulJsonResponse('La circular no existe');
 
         $parent = $this->parentFacade->find($idParent);
         if ($parent == null) return $this->responseFactory->unsuccessfulJsonResponse('El padre no existe');
-
-        $parents = $circular->getParents();
-        $messages = $parent->getMessages();
-        
-            foreach ($parents as $p) {
-                foreach ($messages as $m) {
-                    if ($p == $parent && $m == $circular) {
-                        $cont = $cont + 1;
-                    }
-                }
-            }
-            if ($cont == 1) {
+        $readCircular = 0;
+        $messageRead = $parent->getMessageIfRead($circular);
+            if ($messageRead) {
                 $readCircular = 1;
             } else {
                 $circular->addParent($parent);

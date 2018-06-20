@@ -378,4 +378,17 @@ class Progenitor
     {
         return $this->messages;
     }
+
+    /**
+     * Get messages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMessageIfRead(Message $message)
+    {
+        foreach ($this->messages as $messageParent)
+            if ($messageParent->getId() == $message->getId())
+                return $messageParent;
+        return null;
+    }
 }
