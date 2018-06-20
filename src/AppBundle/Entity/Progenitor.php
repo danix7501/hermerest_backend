@@ -271,6 +271,19 @@ class Progenitor
     }
 
     /**
+     * Get pollReplies
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPollIFReply(Message $message)
+    {
+        foreach ($this->pollReplies as $replieParent)
+            if ($replieParent->getPollOption()->getPoll()->getId() == $message->getId())
+                return $replieParent->getPollOption()->getPoll();
+        return null;
+    }
+
+    /**
      * Get authorizationReply
      *
      * @return AuthorizationReply

@@ -190,33 +190,56 @@ class ProgenitoresController extends Controller
         $parent = $this->progenitorFacade->find($id);
         if ($parent == null) return $this->responseFactory->unsuccessfulJsonResponse("El padre no existe");
         $messages = $parent->getMessagesOfType($request->query->get('type'));
-        return $this->responseFactory->successfulJsonResponse($this->getMessagesArray($messages, $request->query->get('type')));
+        return $this->responseFactory->successfulJsonResponse($this->getMessagesArray($messages, $request->query->get('type'), $parent));
 
     }
 
-    private function getMessagesArray($messages, $type): array
+    private function getMessagesArray($messages, $type, $parent): array
     {
         $messagesArray = [];
         foreach ($messages as $message) {
-            array_push($messagesArray, $type == 'Authorization' ?
-                [
-                    'id' => $message['message']->getId(),
-                    'subject' => $message['message']->getSubject(),
-                    'sendingDate' => $message['message']->getSendingDate()->format('Y-m-d H:i:s'),
-                    'attachment' => count($message['message']->getAttachments()) > 0 ? true : false,
-                    'limitDate' => $message['message']->getlimitDate()->format('Y-m-d H:i:s'),
-                    'studentId' => $message['child']->getId(),
-                    'studentName' => $message['child']->getName(),
-                    'centre' => $message['message']->getCentre()->getName()
-                ] :
-                [
-                    'id' => $message->getId(),
-                    'subject' => $message->getSubject(),
-                    'sendingDate' => $message->getSendingDate()->format('Y-m-d H:i:s'),
-                    'attachment' => count($message->getAttachments()) > 0 ? true : false,
-                    'limitDate' => ($type == 'Poll') ? $message->getlimitDate()->format('Y-m-d H:i:s') : null,
-                    'centre' =>  $message->getCentre()->getName()
-                ]);
+            switch ($type){
+                case 'Authorization':
+                    array_push($messagesArray,
+                        [
+                            'id' => $message['message']->getId(),
+                            'subject' => $message['message']->getSubject(),
+                            'sendingDate' => $message['message']->getSendingDate()->format('Y-m-d H:i:s'),
+                            'attachment' => count($message['message']->getAttachments()) > 0 ? true : false,
+                            'limitDate' => $message['message']->getlimitDate()->format('Y-m-d H:i:s'),
+                            'studentId' => $message['child']->getId(),
+                            'studentName' => $message['child']->getName(),
+                            'centre' => $message['message']->getCentre()->getName(),
+                            'read' => $parent->getAuthorizationReply($message['child'],$message['message']) == null ? 0 : 1
+                        ]);
+                    break;
+                case 'Poll':
+                    array_push($messagesArray,
+                        [
+                            'id' => $message->getId(),
+                            'subject' => $message->getSubject(),
+                            'sendingDate' => $message->getSendingDate()->format('Y-m-d H:i:s'),
+                            'attachment' => count($message->getAttachments()) > 0 ? true : false,
+                            'limitDate' => ($type == 'Poll') ? $message->getlimitDate()->format('Y-m-d H:i:s') : null,
+                            'centre' =>  $message->getCentre()->getName(),
+                            'read' => $parent->getPollIFReply($message) == null ? 0 : 1
+                        ]);
+                    break;
+                case 'Circular':
+                    array_push($messagesArray,
+                        [
+                            'id' => $message->getId(),
+                            'subject' => $message->getSubject(),
+                            'sendingDate' => $message->getSendingDate()->format('Y-m-d H:i:s'),
+                            'attachment' => count($message->getAttachments()) > 0 ? true : false,
+                            'limitDate' => ($type == 'Poll') ? $message->getlimitDate()->format('Y-m-d H:i:s') : null,
+                            'centre' =>  $message->getCentre()->getName(),
+                            'read' => $parent->getMessageIfRead($message) == null ? 0 : 1
+                        ]);
+                    break;
+
+            }
+
         }
         return $messagesArray;
     }
