@@ -33,3 +33,17 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+
+    AppBundle\Services\Mailer:
+        autowire: true
+#        arguments: [%mailer_user%]
+        arguments:
+            $from: %email_from%
+            $mailer: '@mailer'
+            $templating: '@Twig_Environment'
+
+    app.listener.forgot_password:
+        class: AppBundle\Event\ForgotPasswordEventListener
+        tags:
+            - { name: kernel.event_listener, event: coop_tilleuls_forgot_password.create_token, method: onCreateToken }
+            - { name: kernel.event_listener, event: coop_tilleuls_forgot_password.update_password, method: onUpdatePassword }

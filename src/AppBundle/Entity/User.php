@@ -42,6 +42,11 @@ class User
      */
     private $rol;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $activate;
+
 
     public function __construct()
     {
@@ -128,5 +133,29 @@ class User
     public function getRol()
     {
         return $this->rol;
+    }
+
+    /**
+     * Set activate.
+     *
+     * @param bool $activate
+     *
+     * @return User
+     */
+    public function setActivate($activate)
+    {
+        $this->activate = $activate;
+
+        return $this;
+    }
+
+    /**
+     * Get activate.
+     *
+     * @return bool
+     */
+    public function getActivate()
+    {
+        return $this->activate;
     }
 }
