@@ -114,13 +114,30 @@ class CentresController extends Controller
         $centro= $this->centreFacade->find($id);
         if ($centro == null) return $this->responseFactory->unsuccessfulJsonResponse("El centro no existe");
 
-        return $this->responseFactory->successfulJsonResponse(
-            ['teachers' =>
-                $this->utils->serializeArray(
-                    $centro->getTeachers(), new TeacherNormalizer()
-                )
-            ]
-        );
+        $teachersWithoutCourse = [];
+
+        if ($request->query->get('course') == 'noCourse') {
+            foreach ($centro->getTeachers() as $teacher) {
+                if ($teacher->getCourse() == null) {
+                    array_push($teachersWithoutCourse, $teacher);
+                }
+            }
+            return $this->responseFactory->successfulJsonResponse(
+                ['teachers' =>
+                    $this->utils->serializeArray(
+                        $teachersWithoutCourse, new TeacherNormalizer()
+                    )
+                ]
+            );
+        } else {
+            return $this->responseFactory->successfulJsonResponse(
+                ['teachers' =>
+                    $this->utils->serializeArray(
+                        $centro->getTeachers(), new TeacherNormalizer()
+                    )
+                ]
+            );
+        }
     }
 
     /**

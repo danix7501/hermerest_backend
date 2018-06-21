@@ -88,6 +88,31 @@ class StudentsController extends Controller
     }
 
     /**
+     * @Route("", name="listarAlumnosSinCurso")
+     * @Method("GET")
+     */
+    public function getStudentsWithoutCourseAction(Request $request)
+    {
+        $students = $this->studentFacade->findAll();
+        $studentsWithoutCourse = [];
+
+        foreach ($students as $student) {
+            if ($student->getCourse() == null) {
+                array_push($studentsWithoutCourse, $student);
+            }
+        }
+
+        return $this->responseFactory->successfulJsonResponse(
+            ['students' =>
+                $this->utils->serializeArray(
+                    $studentsWithoutCourse, new StudentNormalizer()
+                )
+            ]
+        );
+    }
+
+
+    /**
      * @Route("", name="crearAlumno")
      * @Method("POST")
      */
@@ -166,6 +191,21 @@ class StudentsController extends Controller
         if ($student == null) return $this->responseFactory->unsuccessfulJsonResponse("El alumno no existe");
 
         $this->studentFacade->remove($student);
+        return $this->responseFactory->successfulJsonResponse([]);
+    }
+
+    /**
+     * @Route("/{id}/course", name="desaociarCursoDelAlumno")
+     * @Method("DELETE")
+     */
+    public function disassociateCourseAction(Request $request, $id)
+    {
+        $student = $this->studentFacade->find($id);
+        if ($student == null) return $this->responseFactory->unsuccessfulJsonResponse('El alumno no existe');
+
+        $student->setCourse(null);
+        $this->studentFacade->edit();
+
         return $this->responseFactory->successfulJsonResponse([]);
     }
 

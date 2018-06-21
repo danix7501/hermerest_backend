@@ -17,7 +17,7 @@ class UserFacade extends AbstractFacade
         parent::__construct($entityManager, 'AppBundle:User');
     }
 
-    public function findByEmailAndPlainPassword($username, $plainPassword)
+    public function findByUsernameAndPlainPassword($username, $plainPassword)
     {
         return $this->entityManager->getRepository($this->entityName)->findOneBy(
             array(

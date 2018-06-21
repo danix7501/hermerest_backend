@@ -120,6 +120,23 @@ class CoursesController
         return $this->responseFactory->successfulJsonResponse('Alumnos cambiados de curso correctamente');
     }
 
+    /**
+     * @Route("/{idCourse}/student/{idStudent}", name="asociarAlumnoAUnCurso")
+     * @Method("PUT")
+     */
+    public function associateStudentAction(Request $request, $idCourse, $idStudent)
+    {
+        $course = $this->courseFacade->find($idCourse);
+        $student = $this->studentFacade->find($idStudent);
+
+        if ($course == null) $this->responseFactory->unsuccessfulJsonResponse('El curso no existe');
+        if ($student == null) $this->responseFactory->unsuccessfulJsonResponse('El alumno no existe');
+
+        $student->setCourse($course);
+        $this->studentFacade->edit();
+
+        return $this->responseFactory->successfulJsonResponse((new StudentNormalizer())->normalize($student));
+    }
 
     /**
      * @Route("/{id}", name="eliminarCurso")

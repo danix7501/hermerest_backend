@@ -34,8 +34,8 @@ class ForgotPasswordEventListener
         $this->mailer->sendMail(
             'Recuperar contraseña',
             Mailer::FORGOT_PASSWORD,
-            ['enlace' => sprintf('http://localhost:4200/recovery-password/%s', $event->getPasswordToken()->getToken())],
-            $event->getPasswordToken()->getUser()->getEmail()
+            ['link' => sprintf('http://localhost:4200/recovery-password/%s', $event->getPasswordToken()->getToken())],
+            $event->getPasswordToken()->getUser()->getUsername()
         );
     }
 
@@ -44,7 +44,7 @@ class ForgotPasswordEventListener
      */
     public function onUpdatePassword(ForgotPasswordEvent $event)
     {
-        $event->getPasswordToken()->getUser()->setContrasena(hash('sha256', $event->getPassword()));
+        $event->getPasswordToken()->getUser()->setPassword(hash('sha256', $event->getPassword()));
         $this->userFacade->edit();
     }
 }

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\AccountToken;
 use AppBundle\Entity\Administrator;
 use AppBundle\Entity\Progenitor;
 use AppBundle\Entity\Teacher;
@@ -17,6 +18,7 @@ use AppBundle\Services\JwtAuth;
 use AppBundle\Services\Mailer;
 use AppBundle\Services\ResponseFactory;
 use AppBundle\Services\Utils;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -77,7 +79,7 @@ class UserController extends Controller
             }
 
         } else {
-            $user = $this->userFacade->findByEmailAndPlainPassword(
+            $user = $this->userFacade->findByUsernameAndPlainPassword(
                 $request->get('username'),
                 $request->get('password')
             );
@@ -127,7 +129,7 @@ class UserController extends Controller
             if ($findUser == null) {
                 $userOther = new User();
                 $userOther->setUsername($request->request->get('username'));
-                $userOther->setPassword(hash('sha256', $randomPassword));
+                $userOther->setPassword(hash('sha256',$randomPassword));
                 $userOther->setActivate(0);
                 $userOther->setRol($request->request->get('rol'));
                 $this->userFacade->create($userOther);
@@ -186,12 +188,10 @@ class UserController extends Controller
             'HERMEREST: Cuenta creada',
             Mailer::NOTIFY_ACCOUNT_CREATED,
             [
-                'enlace' => 'http://localhost:4200/login',
-                'contrasena' => $password
+                'link' => 'http://localhost:4200/login',
+                'password' => $password
             ],
             $user->getUsername()
         );
     }
-
-
 }
