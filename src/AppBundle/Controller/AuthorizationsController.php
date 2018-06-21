@@ -131,7 +131,7 @@ class AuthorizationsController extends Controller
     {
         $nameFile = $request->query->get('attachment');
         $filePath = substr($_SERVER['DOCUMENT_ROOT'],0,-4) . '/src/AppBundle/Uploads/Authorizations/' . $nameFile;
-        header ("Content-Disposition: attachment; filename=$filePath ");
+        header ("Content-Disposition: attachment; filename=$nameFile ");
         header ("Content-Type: application/force-download");
         header ("Content-Length: ".filesize($filePath));
         readfile($filePath);
