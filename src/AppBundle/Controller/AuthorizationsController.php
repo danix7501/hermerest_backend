@@ -124,6 +124,20 @@ class AuthorizationsController extends Controller
     }
 
     /**
+     * @Route("/donwload", name="descargarAutorizacion")
+     * @Method("GET")
+     */
+    public function donwloadAction(Request $request)
+    {
+        $nameFile = $request->query->get('attachment');
+        $filePath = substr($_SERVER['DOCUMENT_ROOT'],0,-4) . '/src/AppBundle/Uploads/Authorizations/' . $nameFile;
+        header ("Content-Disposition: attachment; filename=$filePath ");
+        header ("Content-Type: application/force-download");
+        header ("Content-Length: ".filesize($filePath));
+        readfile($filePath);
+    }
+
+    /**
      * @Route("/{id}/editLimitDate", name="editarFechaLimiteAutorizacion")
      * @Method("PUT")
      */

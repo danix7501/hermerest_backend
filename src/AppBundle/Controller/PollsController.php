@@ -123,6 +123,20 @@ class PollsController extends Controller
             ]
         ]);
     }
+    /**
+     * @Route("/donwload", name="descargarEncuesta")
+     * @Method("GET")
+     */
+    public function donwloadAction(Request $request)
+    {
+        $nameFile = $request->query->get('attachment');
+        $filePath = substr($_SERVER['DOCUMENT_ROOT'],0,-4) . '/src/AppBundle/Uploads/Polls/' . $nameFile;
+        header ("Content-Disposition: attachment; filename=$filePath ");
+        header ("Content-Type: application/force-download");
+        header ("Content-Length: ".filesize($filePath));
+        readfile($filePath);
+    }
+
 
     /**
      * @Route("/{id}/editLimitDate", name="editarFechaLimiteEncuesta")
