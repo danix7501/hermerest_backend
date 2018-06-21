@@ -21,7 +21,7 @@ class UserFacade extends AbstractFacade
     {
         return $this->entityManager->getRepository($this->entityName)->findOneBy(
             array(
-                "username" => $username,
+                "email" => $username,
                 "password" => hash('sha256', $plainPassword)
             )
         );
@@ -31,7 +31,7 @@ class UserFacade extends AbstractFacade
     {
         return $this->entityManager->getRepository($this->entityName)->findOneBy(
             array(
-                "username" => $username
+                "email" => $username
             )
         );
     }

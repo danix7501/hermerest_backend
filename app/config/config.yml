@@ -78,10 +78,11 @@ nelmio_cors:
             allow_headers: ['*']
             allow_methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS']
             max_age: 3600
+
 # ForgotPassword Configuration
 coop_tilleuls_forgot_password:
     password_token_class: 'AppBundle\Entity\PasswordToken'
-    user_class: 'AppBundle\Entity\User'
+    user_class:           'AppBundle\Entity\User'
     password_token:
         class: AppBundle\Entity\PasswordToken # required
         expires_in: 1 day
@@ -89,6 +90,6 @@ coop_tilleuls_forgot_password:
         serialization_groups: []
     user:
         class: AppBundle\Entity\User # required
-        email_field: username
+        email_field: email
         password_field: password
     use_jms_serializer: false # Switch between symfony's serializer component or JMS Serializer

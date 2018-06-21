@@ -130,7 +130,6 @@ class UserController extends Controller
                 $userOther = new User();
                 $userOther->setUsername($request->request->get('username'));
                 $userOther->setPassword(hash('sha256',$randomPassword));
-                $userOther->setActivate(0);
                 $userOther->setRol($request->request->get('rol'));
                 $this->userFacade->create($userOther);
 

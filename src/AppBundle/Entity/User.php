@@ -26,7 +26,7 @@ class User
      *
      * @ORM\Column(name="username", type="string", length=255)
      */
-    private $username;
+    private $email;
 
     /**
      * @var string
@@ -67,7 +67,7 @@ class User
      */
     public function setUsername($username)
     {
-        $this->username = $username;
+        $this->email = $username;
 
         return $this;
     }
@@ -79,7 +79,7 @@ class User
      */
     public function getUsername()
     {
-        return $this->username;
+        return $this->email;
     }
 
     /**
