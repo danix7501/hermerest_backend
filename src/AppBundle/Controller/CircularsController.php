@@ -102,7 +102,7 @@ class CircularsController extends Controller
     }
 
     /**
-     * @Route("/donwloadCircular", name="descargarCircular")
+     * @Route("/donwload", name="descargarCircular")
      * @Method("GET")
      */
     public function donwloadAction(Request $request)
