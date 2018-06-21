@@ -78,7 +78,7 @@ class CircularsController extends Controller
             $tempFile = $_FILES['file']['tmp_name'];
             $fileName = $_FILES['file']['name'];
             if ($tempFile != null) {
-                $filePath = $_SERVER['DOCUMENT_ROOT'] . '/hermerest_backend/src/AppBundle/Uploads/Circulars/' . $fileName;
+                $filePath = $_SERVER['DOCUMENT_ROOT'] . '/src/AppBundle/Uploads/Circulars/' . $fileName;
                 move_uploaded_file($tempFile, $filePath);
                 $attachment = new Attachment(
                     $fileName,

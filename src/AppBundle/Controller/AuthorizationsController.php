@@ -100,7 +100,7 @@ class AuthorizationsController extends Controller
             $tempFile = $_FILES['file']['tmp_name'];
             $fileName = $_FILES['file']['name'];
             if ($tempFile != null) {
-                $filePath = $_SERVER['DOCUMENT_ROOT'] .'/hermerest_backend/src/AppBundle/Uploads/Authorizations/'. $fileName;
+                $filePath = $_SERVER['DOCUMENT_ROOT'] .'/src/AppBundle/Uploads/Authorizations/'. $fileName;
                 move_uploaded_file($tempFile, $filePath);
                 $attachment = new Attachment(
                     $fileName,
