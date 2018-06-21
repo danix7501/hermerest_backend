@@ -102,6 +102,20 @@ class CircularsController extends Controller
     }
 
     /**
+     * @Route("/donwloadCircular", name="descargarCircular")
+     * @Method("GET")
+     */
+    public function donwloadAction(Request $request)
+    {
+        $nameFile = $request->query->get('attachment');
+        $filePath = substr($_SERVER['DOCUMENT_ROOT'],0,-4) . '/src/AppBundle/Uploads/Circulars/' . $nameFile;
+        header ("Content-Disposition: attachment; filename=$filePath ");
+        header ("Content-Type: application/force-download");
+        header ("Content-Length: ".filesize($filePath));
+        readfile($filePath);
+    }
+
+    /**
      * @Route("/{idCircular}/parents/{idParent}", name="verCircular")
      * @Method("GET")
      */
