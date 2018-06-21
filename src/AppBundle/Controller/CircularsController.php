@@ -78,8 +78,6 @@ class CircularsController extends Controller
             $tempFile = $_FILES['file']['tmp_name'];
             $fileName = $_FILES['file']['name'];
             if ($tempFile != null) {
-                var_dump($_SERVER);
-                die();
                 $filePath = substr($_SERVER['DOCUMENT_ROOT'],-4) . '/src/AppBundle/Uploads/Circulars/' . $fileName;
                 move_uploaded_file($tempFile, $filePath);
                 $attachment = new Attachment(
