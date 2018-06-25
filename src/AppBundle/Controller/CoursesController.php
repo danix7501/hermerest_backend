@@ -139,6 +139,24 @@ class CoursesController
     }
 
     /**
+     * @Route("/{idCourse}/teacher/{idTeacher}", name="asociarProfesorAUnCurso")
+     * @Method("POST")
+     */
+    public function associateTeacherAction(Request $request, $idCourse, $idTeacher)
+    {
+        $course = $this->courseFacade->find($idCourse);
+        $teacher = $this->teacherFacade->find($idTeacher);
+
+        if ($course == null) $this->responseFactory->unsuccessfulJsonResponse('El curso no existe');
+        if ($teacher == null) $this->responseFactory->unsuccessfulJsonResponse('El profesor no existe');
+
+        $course->setTeacher($teacher);
+        $this->courseFacade->edit();
+
+        return $this->responseFactory->successfulJsonResponse('Profesor desasociado del curso correctamente');
+    }
+
+    /**
      * @Route("/{id}", name="eliminarCurso")
      * @Method("DELETE")
      */
