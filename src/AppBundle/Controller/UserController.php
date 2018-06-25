@@ -149,6 +149,7 @@ class UserController extends Controller
                                 [
                                     'id' => $teacher->getId(),
                                     'name' => $teacher->getName(),
+                                    'username' => $teacher->getUser()->getUsername(),
                                     'course' => null
                                 ]
                         ]);
