@@ -121,11 +121,19 @@ class StudentsController extends Controller
         $course = $this->courseFacade->find($request->get('course'));
         $centre = $this->centreFacade->find($request->get('centre'));
 
-        $student = new Student();
-        $student->setName($request->request->get('name'));
-        $student->setSurname($request->request->get('surname'));
-        $student->setCourse($course);
-        $student->setCentre($centre);
+        if ($request->get('course')) {
+            $student = new Student();
+            $student->setName($request->request->get('name'));
+            $student->setSurname($request->request->get('surname'));
+            $student->setCourse($course);
+            $student->setCentre($centre);
+        } else {
+            $student = new Student();
+            $student->setName($request->request->get('name'));
+            $student->setSurname($request->request->get('surname'));
+            $student->setCourse(NULL);
+            $student->setCentre($centre);
+        }
 
         $this->studentFacade->create($student);
         return $this->responseFactory->successfulJsonResponse((new StudentNormalizer())->normalize($student));
