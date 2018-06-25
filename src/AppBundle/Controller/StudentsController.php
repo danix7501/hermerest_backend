@@ -146,15 +146,24 @@ class StudentsController extends Controller
      */
     public function registerAction(Request $request)
     {
-        $course = $this->courseFacade->find($request->get('course'));
         $centre = $this->centreFacade->find($request->get('centre'));
         $parents = $request->request->get('telephoneParents');
 
-        $student = new Student();
-        $student->setName($request->request->get('name'));
-        $student->setSurname($request->request->get('surname'));
-        $student->setCourse($course);
-        $student->setCentre($centre);
+        if ($request->get('course') != null) {
+            $course = $this->courseFacade->find($request->get('course'));
+
+            $student = new Student();
+            $student->setName($request->request->get('name'));
+            $student->setSurname($request->request->get('surname'));
+            $student->setCourse($course);
+            $student->setCentre($centre);
+        } else {
+            $student = new Student();
+            $student->setName($request->request->get('name'));
+            $student->setSurname($request->request->get('surname'));
+            $student->setCourse(NULL);
+            $student->setCentre($centre);
+        }
 
         $this->studentFacade->create($student);
 
