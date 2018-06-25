@@ -19,7 +19,8 @@ class TeacherNormalizer implements NormalizerInterface
         return [
             'id' => $object->getId(),
             'name' => $object->getName(),
-            'course' => $object->getCourse() == null ? null : (new CourseNormalizer())->normalize($object->getCourse())
+            'course' => $object->getCourse() == null ? null : (new CourseNormalizer())->normalize($object->getCourse()),
+            'username' => $object->getUser()->getUsername()
         ];
     }
     public function supportsNormalization($data, $format = null)

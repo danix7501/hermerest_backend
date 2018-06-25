@@ -213,7 +213,7 @@ class StudentsController extends Controller
     }
 
     /**
-     * @Route("/{id}/course", name="desaociarCursoDelAlumno")
+     * @Route("/{id}/course", name="desasociarCursoDelAlumno")
      * @Method("DELETE")
      */
     public function disassociateCourseAction(Request $request, $id)
