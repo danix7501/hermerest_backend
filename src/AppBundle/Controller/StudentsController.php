@@ -118,10 +118,11 @@ class StudentsController extends Controller
      */
     public function createAction(Request $request)
     {
-        $course = $this->courseFacade->find($request->get('course'));
         $centre = $this->centreFacade->find($request->get('centre'));
 
-        if ($request->get('course')) {
+        if ($request->get('course') != null) {
+            $course = $this->courseFacade->find($request->get('course'));
+
             $student = new Student();
             $student->setName($request->request->get('name'));
             $student->setSurname($request->request->get('surname'));
